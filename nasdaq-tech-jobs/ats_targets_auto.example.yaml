@@ -1,0 +1,315 @@
+# Auto-derived from live job URLs. REVIEW before pasting into config.yaml.
+# _name_confidence 100 = exact company match; lower = fuzzy (verify the slug).
+# Watch for name collisions (e.g. an EV 'Lucid' vs a software 'Lucid').
+- ticker: INOD
+  name: Innodata Inc. Common Stock
+  ats: greenhouse
+  slug: innodatainc
+  _evidence_jobs: 95
+  _name_confidence: 100
+- ticker: ZS
+  name: Zscaler Inc. Common Stock
+  ats: greenhouse
+  slug: zscaler
+  _evidence_jobs: 15
+  _name_confidence: 100
+- ticker: XMTR
+  name: Xometry Inc. Class A Common Stock
+  ats: greenhouse
+  slug: xometry
+  _evidence_jobs: 14
+  _name_confidence: 100
+- ticker: AFRM
+  name: Affirm Holdings Inc. Class A Common Stock
+  ats: greenhouse
+  slug: affirm
+  _evidence_jobs: 11
+  _name_confidence: 100
+- ticker: APPN
+  name: Appian Corporation Class A Common Stock
+  ats: greenhouse
+  slug: appian
+  _evidence_jobs: 10
+  _name_confidence: 100
+- ticker: BAND
+  name: Bandwidth Inc. Class A Common Stock
+  ats: greenhouse
+  slug: bandwidth
+  _evidence_jobs: 9
+  _name_confidence: 100
+- ticker: ALRM
+  name: Alarm.com Holdings Inc. Common Stock
+  ats: greenhouse
+  slug: alarmcom
+  _evidence_jobs: 8
+  _name_confidence: 100
+- ticker: BLLN
+  name: BillionToOne Inc. Class A Common Stock
+  ats: greenhouse
+  slug: billiontoone
+  _evidence_jobs: 8
+  _name_confidence: 100
+- ticker: ALAB
+  name: Astera Labs Inc. Common Stock
+  ats: greenhouse
+  slug: asteraearlycareer2026
+  _evidence_jobs: 8
+  _name_confidence: 100
+- ticker: TTD
+  name: The Trade Desk Inc. Class A Common Stock
+  ats: greenhouse
+  slug: thetradedesk
+  _evidence_jobs: 7
+  _name_confidence: 100
+- ticker: LEGN
+  name: Legend Biotech Corporation American Depositary Shares
+  ats: greenhouse
+  slug: legendcareers
+  _evidence_jobs: 6
+  _name_confidence: 100
+- ticker: MTCH
+  name: Match Group Inc. Common Stock
+  ats: lever
+  slug: matchgroup
+  _evidence_jobs: 6
+  _name_confidence: 100
+- ticker: PI
+  name: Impinj Inc. Common Stock
+  ats: greenhouse
+  slug: impinjexternal
+  _evidence_jobs: 6
+  _name_confidence: 100
+- ticker: SEZL
+  name: Sezzle Inc. Common Stock
+  ats: greenhouse
+  slug: sezzle
+  _evidence_jobs: 5
+  _name_confidence: 100
+- ticker: EIKN
+  name: Eikon Therapeutics Inc. Common Stock
+  ats: greenhouse
+  slug: eikontherapeutics
+  _evidence_jobs: 5
+  _name_confidence: 100
+- ticker: LCID
+  name: Lucid Group Inc. Common Stock
+  ats: greenhouse
+  slug: lucidsoftware
+  _evidence_jobs: 3
+  _name_confidence: 100
+- ticker: ALMR
+  name: Alamar Biosciences Inc. Common Stock
+  ats: greenhouse
+  slug: alamarbiosciences
+  _evidence_jobs: 3
+  _name_confidence: 100
+- ticker: TRIP
+  name: TripAdvisor Inc. Common Stock
+  ats: greenhouse
+  slug: tripadvisor
+  _evidence_jobs: 3
+  _name_confidence: 100
+- ticker: TXG
+  name: 10x Genomics Inc. Class A Common Stock
+  ats: greenhouse
+  slug: 10xgenomics
+  _evidence_jobs: 3
+  _name_confidence: 100
+- ticker: AVPT
+  name: AvePoint Inc. Class A Common Stock
+  ats: greenhouse
+  slug: avepoint
+  _evidence_jobs: 3
+  _name_confidence: 100
+- ticker: WMG
+  name: Warner Music Group Corp. Class A Common Stock
+  ats: lever
+  slug: wmg
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: APP
+  name: Applovin Corporation Class A Common Stock
+  ats: greenhouse
+  slug: applovin
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: AMPL
+  name: Amplitude Inc. Class A Common Stock
+  ats: greenhouse
+  slug: amplitude
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: MQ
+  name: Marqeta Inc. Class A Common Stock
+  ats: greenhouse
+  slug: mqreferrals
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: GTLB
+  name: GitLab Inc. Class A Common Stock
+  ats: greenhouse
+  slug: gitlab
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: CLSK
+  name: CleanSpark Inc. Common Stock
+  ats: lever
+  slug: cleanspark
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: DLHC
+  name: DLH Holdings Corp.
+  ats: greenhouse
+  slug: dlhcorporation
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: CHCI
+  name: Comstock Holding Companies Inc. Class A Common Stock
+  ats: greenhouse
+  slug: comstock
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: AXSM
+  name: Axsome Therapeutics Inc. Common Stock
+  ats: greenhouse
+  slug: axsometherapeutics
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: PSNL
+  name: Personalis Inc. Common Stock
+  ats: greenhouse
+  slug: personalisinc
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: IBKR
+  name: Interactive Brokers Group Inc. Class A Common Stock
+  ats: greenhouse
+  slug: ibkr
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: GEN
+  name: Gen Digital Inc. Common Stock
+  ats: ashby
+  slug: gen-digital
+  _evidence_jobs: 2
+  _name_confidence: 100
+- ticker: DASH
+  name: DoorDash Inc. Class A Common Stock
+  ats: greenhouse
+  slug: doordashcanada
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: OM
+  name: Outset Medical Inc. Common Stock
+  ats: greenhouse
+  slug: outsetmedical
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: NMIH
+  name: NMI Holdings Inc. Common Stock
+  ats: greenhouse
+  slug: nmi
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: MARA
+  name: MARA Holdings Inc. Common Stock
+  ats: greenhouse
+  slug: mara
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: BMBL
+  name: Bumble Inc. Class A Common Stock
+  ats: lever
+  slug: bumbleinc
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: TWST
+  name: Twist Bioscience Corporation Common Stock
+  ats: greenhouse
+  slug: twistbioscience
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: OMDA
+  name: Omada Health Inc. Common Stock
+  ats: greenhouse
+  slug: omadahealth
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: CAPR
+  name: Capricor Therapeutics Inc. Common Stock
+  ats: lever
+  slug: capricor
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: SERV
+  name: Serve Robotics Inc. Common Stock
+  ats: ashby
+  slug: serverobotics
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: NTRA
+  name: Natera Inc. Common Stock
+  ats: greenhouse
+  slug: natera
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: CORT
+  name: Corcept Therapeutics Incorporated Common Stock
+  ats: greenhouse
+  slug: corcepttherapeutics
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: VRSN
+  name: VeriSign Inc. Common Stock
+  ats: greenhouse
+  slug: verisign
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: HTFL
+  name: Heartflow Inc. Common Stock
+  ats: greenhouse
+  slug: heartflowinc
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: ARVN
+  name: Arvinas Inc. Common Stock
+  ats: greenhouse
+  slug: arvinas
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: IOVA
+  name: Iovance Biotherapeutics Inc. Common Stock
+  ats: greenhouse
+  slug: iovancebiotherapeutics
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: EXTR
+  name: Extreme Networks Inc. Common Stock
+  ats: lever
+  slug: extremenetworks
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: GCMG
+  name: GCM Grosvenor Inc. Class A Common Stock
+  ats: greenhouse
+  slug: gcmgrosvenor
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: LXEO
+  name: Lexeo Therapeutics Inc. Common Stock
+  ats: lever
+  slug: lexeotx
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: OSUR
+  name: OraSure Technologies Inc. Common Stock
+  ats: lever
+  slug: dnagenotek
+  _evidence_jobs: 1
+  _name_confidence: 100
+- ticker: VCEL
+  name: Vericel Corporation Common Stock
+  ats: greenhouse
+  slug: vercel
+  _evidence_jobs: 1
+  _name_confidence: 92

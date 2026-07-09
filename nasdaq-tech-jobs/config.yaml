@@ -1,0 +1,128 @@
+# ---------------------------------------------------------------------------
+# nasdaq-tech-jobs configuration
+# Everything the pipeline needs lives here so you never edit code to tune it.
+# ---------------------------------------------------------------------------
+
+nasdaq_universe:
+  # Official Nasdaq-listed symbols (authoritative membership).
+  listed_symbols_csv: "https://raw.githubusercontent.com/datasets/nasdaq-listings/main/data/nasdaq-listed.csv"
+  # Screener export that adds industry + market cap + clean names.
+  # Intersected with listed_symbols_csv so only true Nasdaq companies survive.
+  enrichment_csv: "https://raw.githubusercontent.com/Ate329/top-us-stock-tickers/main/tickers/all.csv"
+
+aggregators:
+  # SimplifyJobs machine-readable listings. role_type is inferred per source.
+  - name: "Simplify New Grad"
+    url: "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json"
+    role_type: "new_grad"
+  - name: "Simplify Internships (Summer 2026)"
+    url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json"
+    role_type: "intern"
+
+matching:
+  # Fuzzy company-name match threshold (0-100). Higher = stricter, fewer false hits.
+  fuzzy_cutoff: 92
+
+# Direct ATS polling. This is the "freshness + full-detail" layer.
+# You do NOT have to fill this by hand: run `python -m src.discover` to auto-derive
+# verified slugs from the aggregator job URLs into ats_targets_auto.yaml, then
+# review it and move the good ones here. A few confident seeds are included.
+# ats options: greenhouse | lever | ashby
+ats_targets:
+  - {ticker: "GTLB", name: "GitLab",   ats: "greenhouse", slug: "gitlab"}
+  - {ticker: "AFRM", name: "Affirm",   ats: "greenhouse", slug: "affirm"}
+  - {ticker: "APP",  name: "AppLovin", ats: "greenhouse", slug: "applovin"}
+  - {ticker: "DASH", name: "DoorDash", ats: "greenhouse", slug: "doordashusa"}
+  - {ticker: "APPN", name: "Appian",   ats: "greenhouse", slug: "appian"}
+  # ^ starter set (verified from live job URLs). Extend via discover.py.
+
+# ---- Role classification keywords (case-insensitive substring match) ----
+classify:
+  # A job is kept only if it looks like an early-career role.
+  early_career_any:
+    - "new grad"
+    - "new graduate"
+    - "university grad"
+    - "early career"
+    - "entry level"
+    - "entry-level"
+    - "campus"
+    - "intern"
+    - "internship"
+    - "co-op"
+    - "graduate program"
+    - "graduate engineer"
+    - "associate "
+    - " i "
+    - " 1 "
+    - "junior"
+  # Titles containing these are dropped even if they matched above (too senior).
+  seniority_block:
+    - "senior"
+    - "staff"
+    - "principal"
+    - "lead "
+    - "manager"
+    - "director"
+    - "sr."
+    - "sr "
+    - " ii"
+    - " iii"
+    - " iv"
+    - "vp "
+    - "head of"
+
+  # Track detection. First matching track wins (order matters).
+  tracks:
+    dsml:            # <-- your special focus
+      - "data scien"
+      - "machine learning"
+      - "ml engineer"
+      - " mle"
+      - "applied scien"
+      - "research scien"
+      - "research engineer"
+      - "deep learning"
+      - "nlp"
+      - "computer vision"
+      - "ai engineer"
+      - "ai/ml"
+      - "a.i."
+      - "artificial intelligence"
+      - "ml infra"
+      - "ml platform"
+      - "generative ai"
+      - "llm"
+      - "ai resident"
+    data_eng:
+      - "data engineer"
+      - "analytics engineer"
+      - "data platform"
+    swe:
+      - "software engineer"
+      - "swe"
+      - "backend"
+      - "front end"
+      - "frontend"
+      - "full stack"
+      - "full-stack"
+      - "developer"
+    quant:
+      - "quant"
+      - "trading"
+    hardware:
+      - "hardware"
+      - "asic"
+      - "fpga"
+      - "silicon"
+      - "embedded"
+      - "firmware"
+
+output:
+  csv_path: "data/jobs.csv"
+  html_path: "docs/index.html"
+  state_path: "data/seen.json"
+  # A job stays on the board this many days after it first disappears from sources.
+  keep_stale_days: 5
+  # Owner name shown in the page header. Cosmetic.
+  owner: "your job board"
