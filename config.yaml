@@ -18,6 +18,11 @@ aggregators:
   - name: "Simplify Internships (Summer 2026)"
     url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json"
     role_type: "intern"
+    # The Simplify feed above already carries Fall/Winter/Spring off-season roles
+    # (tagged in `terms`). This community feed adds extra off-season coverage.
+  - name: "Off-Season Internships (community)"
+    url: "https://raw.githubusercontent.com/vanshb03/Summer2027-Internships/dev/.github/scripts/listings.json"
+    role_type: "intern"
 
 matching:
   # Fuzzy company-name match threshold (0-100). Higher = stricter, fewer false hits.

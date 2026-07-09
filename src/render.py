@@ -70,6 +70,7 @@ def write_html(path: str, jobs: list[dict], owner: str) -> None:
         "conf": j.get("confidence", 0),
         "active": bool(j["active"]),
         "posted": _date(j.get("date_posted")),
+        "seasons": j.get("seasons") or [],
         "source": j["source"],
         "url": j["url"],
         "id": j["key"],
@@ -81,6 +82,8 @@ def write_html(path: str, jobs: list[dict], owner: str) -> None:
         "new": sum(r["new"] for r in rows),
         "dsml": sum(1 for r in rows if r["track"] == "dsml" and r["active"]),
         "companies": len({r["ticker"] for r in rows if r["ticker"]}),
+        "offseason": sum(1 for r in rows if r["active"] and r["role"] == "intern"
+                         and any(s != "Summer" for s in r["seasons"])),
     }
     html = (_TEMPLATE
             .replace("__OWNER__", owner)
@@ -227,6 +230,21 @@ _TEMPLATE = r"""<!DOCTYPE html>
       <button data-v="30">≤30d</button>
     </div>
   </div>
+  <div class="row1" style="margin-top:10px">
+    <div class="seg" id="capseg" title="Company size by market cap (Nasdaq-confirmed companies only)">
+      <button data-v="0" aria-pressed="true">Any size</button>
+      <button data-v="10">$10B+</button>
+      <button data-v="100">$100B+</button>
+      <button data-v="1000">$1T+</button>
+    </div>
+    <div class="seg" id="seasonseg" title="Internship season (from the feed's term tags)">
+      <button data-v="all" aria-pressed="true">All seasons</button>
+      <button data-v="Summer">Summer</button>
+      <button data-v="Fall">Fall</button>
+      <button data-v="Winter">Winter</button>
+      <button data-v="Spring">Spring</button>
+    </div>
+  </div>
   <div class="chips" id="tracks">
     <span class="chip dsml" data-t="dsml" aria-pressed="true">DS / ML / Research</span>
     <span class="chip on" data-t="data_eng" aria-pressed="true">Data Eng</span>
@@ -275,15 +293,24 @@ const applied = new Set(JSON.parse(localStorage.getItem("applied")||"[]"));
 document.getElementById("stamp").textContent = "updated " + META.generated;
 const tape = [
   ["NEW TODAY", META.new, "g"], ["ACTIVE DS/ML", META.dsml, "v"],
+  ["OFF-SEASON INTERNSHIPS", META.offseason, "g"],
   ["NASDAQ COMPANIES", META.companies, ""], ["TOTAL ROLES", META.total, ""],
 ];
 document.getElementById("tape").innerHTML =
   [...tape, ...tape].map(([k,v,c])=>`<li>${k} <b class="${c}">${v}</b></li>`).join("");
 
 const ALL_TRACKS = ["dsml","data_eng","swe","quant","hardware","other"];
-const state = {q:"", nw:"all", role:"all", maxAge:0, sort:"new", dir:1,
+const state = {q:"", nw:"all", role:"all", maxAge:0, capB:0, season:"all", sort:"new", dir:1,
   tracks:new Set(ALL_TRACKS),
   nasdaq:false, remote:false, active:true, hideApplied:false};
+
+// Compact market-cap label, e.g. 1.8e12 -> "$1.8T", 8.7e10 -> "$87B".
+function fmtCap(c){
+  if(!c) return "";
+  if(c>=1e12) return "$"+(c/1e12).toFixed(c<1e13?1:0)+"T";
+  if(c>=1e9)  return "$"+Math.round(c/1e9)+"B";
+  return "$"+Math.round(c/1e6)+"M";
+}
 
 // Age in whole days from the posted date (UTC) to now; null if no/invalid date.
 function ageDays(posted){
@@ -302,6 +329,8 @@ function pass(r){
   if(state.remote && !r.remote) return false;
   if(state.active && !r.active) return false;
   if(state.maxAge){ const a=ageDays(r.posted); if(a===null || a>state.maxAge) return false; }
+  if(state.capB && (!r.cap || r.cap < state.capB*1e9)) return false;
+  if(state.season!=="all" && !(r.seasons||[]).includes(state.season)) return false;
   if(state.hideApplied && applied.has(r.id)) return false;
   if(state.q){
     const h=(r.title+" "+r.company+" "+r.ticker+" "+r.loc+" "+r.industry).toLowerCase();
@@ -322,18 +351,20 @@ function render(){
   const list = DATA.filter(pass).sort(cmp);
   const tb=document.getElementById("rows");
   tb.innerHTML = list.map(r=>{
-    const tk = r.ticker ? `<span class="tk ${r.conf<100?'fuzzy':''}" title="${r.conf<100?'fuzzy match ('+r.conf+') — verify':'Nasdaq: '+r.ticker}">${r.ticker}</span>`:"";
+    const capt = r.cap ? " · "+fmtCap(r.cap) : "";
+    const tk = r.ticker ? `<span class="tk ${r.conf<100?'fuzzy':''}" title="${r.conf<100?'fuzzy match ('+r.conf+') — verify'+capt:'Nasdaq: '+r.ticker+capt}">${r.ticker}</span>`:"";
     const nb = r.new ? `<span class="badge b-new">new</span>`:"";
     const loc = r.remote ? `<span class="rem">Remote</span>${r.loc&&r.loc!=="—"?" · "+r.loc:""}` : r.loc;
     const ap = applied.has(r.id);
     const age = ageDays(r.posted);
+    const seas = (r.seasons||[]).join("/");
     return `<tr class="${r.new?'new':''} ${r.track==='dsml'?'dsml':''} ${ap?'applied':''}">
       <td>${nb}</td>
       <td><span class="co">${esc(r.company)}</span>${tk}</td>
       <td class="ttl">${esc(r.title)}</td>
       <td>${badge(r.track)}</td>
       <td>${esc(loc)}</td>
-      <td class="rt">${r.role==='intern'?'intern':'new grad'}</td>
+      <td class="rt">${r.role==='intern'?'intern':'new grad'}${seas?' · '+seas:''}</td>
       <td class="posted">${r.posted||"—"}</td>
       <td class="age ${age!==null&&age<=7?'fresh':''}">${ageLabel(age)}</td>
       <td class="apply"><a href="${r.url}" target="_blank" rel="noopener">apply →</a></td>
@@ -353,6 +384,8 @@ function writeHash(){
   if(state.nw!=="all") p.set("new", state.nw);
   if(state.role!=="all") p.set("role", state.role);
   if(state.maxAge) p.set("age", state.maxAge);
+  if(state.capB) p.set("cap", state.capB);
+  if(state.season!=="all") p.set("season", state.season);
   if(state.tracks.size!==ALL_TRACKS.length) p.set("tracks", [...state.tracks].join(","));
   if(state.nasdaq) p.set("nasdaq","1");
   if(state.remote) p.set("remote","1");
@@ -370,6 +403,8 @@ function readHash(){
   if(p.has("new")) state.nw = p.get("new");
   if(p.has("role")) state.role = p.get("role");
   if(p.has("age")) state.maxAge = parseInt(p.get("age"))||0;
+  if(p.has("cap")) state.capB = parseInt(p.get("cap"))||0;
+  if(p.has("season")) state.season = p.get("season");
   if(p.has("tracks")) state.tracks = new Set(p.get("tracks").split(",").filter(Boolean));
   state.nasdaq = p.get("nasdaq")==="1";
   state.remote = p.get("remote")==="1";
@@ -383,6 +418,7 @@ function setSeg(id,v){const el=document.getElementById(id);
 function syncUI(){
   document.getElementById("q").value = state.q;
   setSeg("newseg", state.nw); setSeg("roleseg", state.role); setSeg("ageseg", state.maxAge);
+  setSeg("capseg", state.capB); setSeg("seasonseg", state.season);
   document.querySelectorAll("#tracks .chip")
     .forEach(c=>c.setAttribute("aria-pressed", state.tracks.has(c.dataset.t)));
   document.getElementById("fNasdaq").checked = state.nasdaq;
@@ -396,6 +432,8 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;","
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.toLowerCase().trim();render();});
 seg("newseg",v=>state.nw=v); seg("roleseg",v=>state.role=v);
 seg("ageseg",v=>state.maxAge=parseInt(v)||0);
+seg("capseg",v=>state.capB=parseInt(v)||0);
+seg("seasonseg",v=>state.season=v);
 function seg(id,set){const el=document.getElementById(id);
   el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
     [...el.children].forEach(x=>x.setAttribute("aria-pressed",x===b));set(b.dataset.v);render();});}

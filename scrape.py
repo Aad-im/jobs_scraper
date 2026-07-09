@@ -94,6 +94,7 @@ def main() -> int:
         if key in jobs:
             ex = jobs[key]
             ex["locations"] = sorted(set(ex["locations"]) | set(locs))
+            ex["seasons"] = sorted(set(ex["seasons"]) | set(r.get("seasons") or []))
             ex["remote"] = ex["remote"] or is_remote(locs)
             ex["active"] = ex["active"] or bool(r.get("active", True))
             if ticker and not ex["ticker"]:      # let ATS/matched record supply ticker
@@ -106,6 +107,7 @@ def main() -> int:
             "ticker": ticker, "industry": comp.industry if comp else "",
             "market_cap": comp.market_cap if comp else 0, "confidence": conf if ticker else 0,
             "locations": locs, "remote": is_remote(locs),
+            "seasons": sorted(r.get("seasons") or []),
             "active": bool(r.get("active", True)),
             "date_posted": r.get("date_posted", 0),
             "source": r.get("source", ""), "url": r.get("url", ""),

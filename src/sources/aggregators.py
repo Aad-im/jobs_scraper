@@ -13,6 +13,25 @@ def _locations(entry: dict) -> list[str]:
     return [str(x).strip() for x in locs if str(x).strip()]
 
 
+_SEASON_WORDS = ("Summer", "Fall", "Winter", "Spring")
+
+
+def _seasons(terms) -> list[str]:
+    """Reduce a feed's `terms`/`season` field (e.g. ["Fall 2026", "Summer 2027"])
+    to the distinct season words present, so roles can be filtered off-season."""
+    if not terms:
+        return []
+    if isinstance(terms, str):
+        terms = [terms]
+    out: list[str] = []
+    for t in terms:
+        low = str(t).lower()
+        for w in _SEASON_WORDS:
+            if w.lower() in low and w not in out:
+                out.append(w)
+    return out
+
+
 def fetch(feed: dict) -> list[dict]:
     """feed = {name, url, role_type} from config.aggregators."""
     r = requests.get(feed["url"], timeout=90)
@@ -33,5 +52,7 @@ def fetch(feed: dict) -> list[dict]:
             "active": bool(e.get("active", True)),
             "date_posted": e.get("date_posted") or e.get("date_updated") or 0,
             "ext_id": str(e.get("id") or ""),
+            # `terms` (Simplify) or `season` (some community forks) → season tags.
+            "seasons": _seasons(e.get("terms") or e.get("season")),
         })
     return out
