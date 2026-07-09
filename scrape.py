@@ -82,6 +82,13 @@ def main() -> int:
             continue
         track = track_of(title, r.get("category", ""), ccfg)
 
+        # Aggregator feeds are already scoped to tech; raw ATS boards are not — they
+        # list every department, so the loose early-career keywords ("associate", " i ")
+        # would otherwise leak warehouse/ops/sales roles in. Keep only tech-track roles
+        # from the direct-ATS layer (identified by the forced ticker it stamps).
+        if r.get("forced_ticker") and track == "other":
+            continue
+
         key = job_key(company, title, r.get("url", ""))
         locs = r.get("locations") or []
         if key in jobs:

@@ -29,10 +29,17 @@ def early_career_ok(title: str, category: str, role_type: str, cfg: dict) -> boo
 def track_of(title: str, category: str, cfg: dict) -> str:
     t = title.lower()
     c = category.lower()
+    # The title is the strongest signal, so match every track on the title first.
+    # Only then fall back to the aggregator's (broad, umbrella-ish) category — otherwise
+    # a "Data/AI/ML" category drags plain "Data Engineer" titles into dsml before the
+    # data_eng track is ever considered.
     for name, needles in cfg["tracks"].items():
-        if _has(t, needles) or _has(c, needles):
+        if _has(t, needles):
             return name
-    # Fall back to the aggregator category when the title is uninformative.
+    for name, needles in cfg["tracks"].items():
+        if _has(c, needles):
+            return name
+    # Coarse category fallback when neither title nor track keywords matched.
     if "ai" in c or "ml" in c or "data" in c:
         return "dsml"
     if "software" in c:

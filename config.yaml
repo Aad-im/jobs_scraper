@@ -34,7 +34,36 @@ ats_targets:
   - {ticker: "APP",  name: "AppLovin", ats: "greenhouse", slug: "applovin"}
   - {ticker: "DASH", name: "DoorDash", ats: "greenhouse", slug: "doordashusa"}
   - {ticker: "APPN", name: "Appian",   ats: "greenhouse", slug: "appian"}
-  # ^ starter set (verified from live job URLs). Extend via discover.py.
+  # ^ original starter set. Below: promoted from ats_targets_auto.yaml (discover.py),
+  #   name_confidence 100, ≥2 evidence jobs. The LCID/lucidsoftware collision the
+  #   README warns about (EV Lucid Group vs. private Lucid Software) was excluded.
+  - {ticker: "INOD", name: "Innodata",            ats: "greenhouse", slug: "innodatainc"}
+  - {ticker: "ZS",   name: "Zscaler",             ats: "greenhouse", slug: "zscaler"}
+  - {ticker: "XMTR", name: "Xometry",             ats: "greenhouse", slug: "xometry"}
+  - {ticker: "BAND", name: "Bandwidth",           ats: "greenhouse", slug: "bandwidth"}
+  - {ticker: "ALRM", name: "Alarm.com",           ats: "greenhouse", slug: "alarmcom"}
+  - {ticker: "BLLN", name: "BillionToOne",        ats: "greenhouse", slug: "billiontoone"}
+  - {ticker: "ALAB", name: "Astera Labs",         ats: "greenhouse", slug: "asteraearlycareer2026"}
+  - {ticker: "TTD",  name: "The Trade Desk",      ats: "greenhouse", slug: "thetradedesk"}
+  - {ticker: "LEGN", name: "Legend Biotech",      ats: "greenhouse", slug: "legendcareers"}
+  - {ticker: "MTCH", name: "Match",               ats: "lever",      slug: "matchgroup"}
+  - {ticker: "PI",   name: "Impinj",              ats: "greenhouse", slug: "impinjexternal"}
+  - {ticker: "SEZL", name: "Sezzle",              ats: "greenhouse", slug: "sezzle"}
+  - {ticker: "EIKN", name: "Eikon Therapeutics",  ats: "greenhouse", slug: "eikontherapeutics"}
+  - {ticker: "ALMR", name: "Alamar Biosciences",  ats: "greenhouse", slug: "alamarbiosciences"}
+  - {ticker: "TRIP", name: "TripAdvisor",         ats: "greenhouse", slug: "tripadvisor"}
+  - {ticker: "TXG",  name: "10x Genomics",        ats: "greenhouse", slug: "10xgenomics"}
+  - {ticker: "AVPT", name: "AvePoint",            ats: "greenhouse", slug: "avepoint"}
+  - {ticker: "WMG",  name: "Warner Music",        ats: "lever",      slug: "wmg"}
+  - {ticker: "AMPL", name: "Amplitude",           ats: "greenhouse", slug: "amplitude"}
+  - {ticker: "MQ",   name: "Marqeta",             ats: "greenhouse", slug: "mqreferrals"}
+  - {ticker: "CLSK", name: "CleanSpark",          ats: "lever",      slug: "cleanspark"}
+  - {ticker: "DLHC", name: "DLH",                 ats: "greenhouse", slug: "dlhcorporation"}
+  - {ticker: "CHCI", name: "Comstock Holding",    ats: "greenhouse", slug: "comstock"}
+  - {ticker: "AXSM", name: "Axsome Therapeutics", ats: "greenhouse", slug: "axsometherapeutics"}
+  - {ticker: "PSNL", name: "Personalis",          ats: "greenhouse", slug: "personalisinc"}
+  - {ticker: "GEN",  name: "Gen Digital",         ats: "ashby",      slug: "gen-digital"}
+  # Extend further via `python -m src.discover`.
 
 # ---- Role classification keywords (case-insensitive substring match) ----
 classify:

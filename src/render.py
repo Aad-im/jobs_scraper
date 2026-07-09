@@ -184,6 +184,8 @@ _TEMPLATE = r"""<!DOCTYPE html>
   .rt{font-family:var(--mono);font-size:11px;color:var(--muted)}
   .rem{color:var(--up);font-weight:600}
   .posted{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .age{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .age.fresh{color:var(--up);font-weight:600}
   .apply{font-family:var(--mono);font-size:12px}
   .mark{border:1px solid var(--hair);background:#fff;border-radius:6px;
     font-size:11px;padding:3px 8px;cursor:pointer;color:var(--muted)}
@@ -218,6 +220,12 @@ _TEMPLATE = r"""<!DOCTYPE html>
       <button data-v="new_grad">New grad</button>
       <button data-v="intern">Intern</button>
     </div>
+    <div class="seg" id="ageseg" title="Filter by how recently the role was posted">
+      <button data-v="0" aria-pressed="true">Any age</button>
+      <button data-v="7">≤7d</button>
+      <button data-v="14">≤14d</button>
+      <button data-v="30">≤30d</button>
+    </div>
   </div>
   <div class="chips" id="tracks">
     <span class="chip dsml" data-t="dsml" aria-pressed="true">DS / ML / Research</span>
@@ -232,6 +240,7 @@ _TEMPLATE = r"""<!DOCTYPE html>
     <label><input type="checkbox" id="fRemote"> Remote only</label>
     <label><input type="checkbox" id="fActive" checked> Active only</label>
     <label><input type="checkbox" id="fHideApplied"> Hide applied</label>
+    <button class="mark" id="share" title="Copy a link to this filtered view">🔗 copy link</button>
     <span class="count" id="count"></span>
   </div>
 </div>
@@ -246,6 +255,7 @@ _TEMPLATE = r"""<!DOCTYPE html>
       <th data-k="loc">Location</th>
       <th data-k="role">Type</th>
       <th data-k="posted">Posted</th>
+      <th data-k="posted">Age</th>
       <th></th><th></th>
     </tr></thead>
     <tbody id="rows"></tbody>
@@ -270,9 +280,19 @@ const tape = [
 document.getElementById("tape").innerHTML =
   [...tape, ...tape].map(([k,v,c])=>`<li>${k} <b class="${c}">${v}</b></li>`).join("");
 
-const state = {q:"", nw:"all", role:"all", sort:"new", dir:1,
-  tracks:new Set(["dsml","data_eng","swe","quant","hardware","other"]),
+const ALL_TRACKS = ["dsml","data_eng","swe","quant","hardware","other"];
+const state = {q:"", nw:"all", role:"all", maxAge:0, sort:"new", dir:1,
+  tracks:new Set(ALL_TRACKS),
   nasdaq:false, remote:false, active:true, hideApplied:false};
+
+// Age in whole days from the posted date (UTC) to now; null if no/invalid date.
+function ageDays(posted){
+  if(!posted) return null;
+  const t = Date.parse(posted + "T00:00:00Z");
+  if(isNaN(t)) return null;
+  return Math.floor((Date.now() - t) / 86400000);
+}
+function ageLabel(a){ return a===null ? "—" : a<=0 ? "today" : a+"d"; }
 
 function pass(r){
   if(state.nw==="new" && !r.new) return false;
@@ -281,6 +301,7 @@ function pass(r){
   if(state.nasdaq && !r.nasdaq) return false;
   if(state.remote && !r.remote) return false;
   if(state.active && !r.active) return false;
+  if(state.maxAge){ const a=ageDays(r.posted); if(a===null || a>state.maxAge) return false; }
   if(state.hideApplied && applied.has(r.id)) return false;
   if(state.q){
     const h=(r.title+" "+r.company+" "+r.ticker+" "+r.loc+" "+r.industry).toLowerCase();
@@ -305,6 +326,7 @@ function render(){
     const nb = r.new ? `<span class="badge b-new">new</span>`:"";
     const loc = r.remote ? `<span class="rem">Remote</span>${r.loc&&r.loc!=="—"?" · "+r.loc:""}` : r.loc;
     const ap = applied.has(r.id);
+    const age = ageDays(r.posted);
     return `<tr class="${r.new?'new':''} ${r.track==='dsml'?'dsml':''} ${ap?'applied':''}">
       <td>${nb}</td>
       <td><span class="co">${esc(r.company)}</span>${tk}</td>
@@ -313,6 +335,7 @@ function render(){
       <td>${esc(loc)}</td>
       <td class="rt">${r.role==='intern'?'intern':'new grad'}</td>
       <td class="posted">${r.posted||"—"}</td>
+      <td class="age ${age!==null&&age<=7?'fresh':''}">${ageLabel(age)}</td>
       <td class="apply"><a href="${r.url}" target="_blank" rel="noopener">apply →</a></td>
       <td><button class="mark" data-id="${r.id}">${ap?'undo':'applied'}</button></td>
     </tr>`;
@@ -320,12 +343,59 @@ function render(){
   document.getElementById("empty").style.display = list.length?"none":"block";
   document.getElementById("count").textContent =
     `${list.length} shown · ${DATA.filter(r=>r.track==='dsml'&&pass(r)).length} DS/ML`;
+  writeHash();
+}
+
+// ---- shareable filter state (URL hash) ------------------------------------
+function writeHash(){
+  const p = new URLSearchParams();
+  if(state.q) p.set("q", state.q);
+  if(state.nw!=="all") p.set("new", state.nw);
+  if(state.role!=="all") p.set("role", state.role);
+  if(state.maxAge) p.set("age", state.maxAge);
+  if(state.tracks.size!==ALL_TRACKS.length) p.set("tracks", [...state.tracks].join(","));
+  if(state.nasdaq) p.set("nasdaq","1");
+  if(state.remote) p.set("remote","1");
+  if(!state.active) p.set("active","0");
+  if(state.hideApplied) p.set("hide","1");
+  if(state.sort!=="new") p.set("sort", state.sort);
+  if(state.dir!==1) p.set("dir","-1");
+  const s = p.toString();
+  try{ history.replaceState(null,"", s ? "#"+s : location.pathname+location.search); }catch(_){}
+}
+function readHash(){
+  const p = new URLSearchParams(location.hash.slice(1));
+  if(![...p.keys()].length) return;
+  if(p.has("q")) state.q = p.get("q").toLowerCase();
+  if(p.has("new")) state.nw = p.get("new");
+  if(p.has("role")) state.role = p.get("role");
+  if(p.has("age")) state.maxAge = parseInt(p.get("age"))||0;
+  if(p.has("tracks")) state.tracks = new Set(p.get("tracks").split(",").filter(Boolean));
+  state.nasdaq = p.get("nasdaq")==="1";
+  state.remote = p.get("remote")==="1";
+  if(p.has("active")) state.active = p.get("active")!=="0";
+  state.hideApplied = p.get("hide")==="1";
+  if(p.has("sort")) state.sort = p.get("sort");
+  if(p.has("dir")) state.dir = p.get("dir")==="-1" ? -1 : 1;
+}
+function setSeg(id,v){const el=document.getElementById(id);
+  [...el.children].forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===String(v)));}
+function syncUI(){
+  document.getElementById("q").value = state.q;
+  setSeg("newseg", state.nw); setSeg("roleseg", state.role); setSeg("ageseg", state.maxAge);
+  document.querySelectorAll("#tracks .chip")
+    .forEach(c=>c.setAttribute("aria-pressed", state.tracks.has(c.dataset.t)));
+  document.getElementById("fNasdaq").checked = state.nasdaq;
+  document.getElementById("fRemote").checked = state.remote;
+  document.getElementById("fActive").checked = state.active;
+  document.getElementById("fHideApplied").checked = state.hideApplied;
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
 // wiring
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.toLowerCase().trim();render();});
 seg("newseg",v=>state.nw=v); seg("roleseg",v=>state.role=v);
+seg("ageseg",v=>state.maxAge=parseInt(v)||0);
 function seg(id,set){const el=document.getElementById(id);
   el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
     [...el.children].forEach(x=>x.setAttribute("aria-pressed",x===b));set(b.dataset.v);render();});}
@@ -342,8 +412,13 @@ document.getElementById("rows").addEventListener("click",e=>{
   const b=e.target.closest(".mark");if(!b)return;const id=b.dataset.id;
   applied.has(id)?applied.delete(id):applied.add(id);
   localStorage.setItem("applied",JSON.stringify([...applied]));render();});
+document.getElementById("share").addEventListener("click",()=>{
+  const b=document.getElementById("share"), url=location.href;
+  const ok=()=>{const o=b.textContent;b.textContent="✓ copied";setTimeout(()=>b.textContent=o,1200);};
+  if(navigator.clipboard) navigator.clipboard.writeText(url).then(ok).catch(()=>prompt("Copy this link:",url));
+  else prompt("Copy this link:",url);});
 
-render();
+readHash(); syncUI(); render();
 </script>
 </body>
 </html>"""
