@@ -21,7 +21,31 @@ def load(path: str) -> dict:
 
 def save(path: str, state: dict) -> None:
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    json.dump(state, open(path, "w"), indent=0)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=0)
+
+
+def save_health(path: str, rows: list[dict], total: int, active: int,
+                shortlisted: int, seconds: float, aborted: bool = False) -> None:
+    """Write the per-source outcome of this run.
+
+    Committed alongside the data so a board that quietly starts returning zero
+    shows up in the git diff instead of going unnoticed for months.
+    """
+    if not path:
+        return
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    payload = {
+        "generated": int(time.time()),
+        "duration_s": round(seconds, 1),
+        "aborted": aborted,
+        "totals": {"jobs": total, "active": active, "shortlisted": shortlisted},
+        "sources_ok": sum(1 for r in rows if r["ok"]),
+        "sources_failed": sum(1 for r in rows if not r["ok"]),
+        "sources": sorted(rows, key=lambda r: (r["ok"], -r["jobs"])),
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=1)
 
 
 def reconcile(state: dict, current_keys: set[str], keep_stale_days: int) -> tuple[dict, set[str]]:

@@ -15,6 +15,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +27,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Cheap, offline, and catches a broken keyword list before it silently
+      # empties the board for a day.
+      - name: Test
+        run: python -m pytest tests/ -q
+
+      # Exit 2 means the run refused to publish because too few roles came back
+      # (see output.min_jobs_to_publish). Keep the previous board and fail loudly.
       - name: Run scraper
         run: python scrape.py
 
@@ -33,10 +41,35 @@ jobs:
         run: |
           git config user.name  "job-bot"
           git config user.email "job-bot@users.noreply.github.com"
-          git add data/jobs.csv data/seen.json docs/index.html
+          git add data/jobs.csv data/seen.json data/health.json docs/index.html
           if git diff --cached --quiet; then
             echo "No changes."
           else
             git commit -m "jobs: refresh $(date -u +%Y-%m-%d)"
             git push
           fi
+
+      - name: Source health summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          p = "data/health.json"
+          if not os.path.exists(p):
+              print("no health report"); raise SystemExit
+          with open(p) as fh:
+              h = json.load(fh)
+          t = h["totals"]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write("## Job board refresh\n")
+              f.write(f"- **{t['active']}** active roles · **{t['shortlisted']}** shortlisted"
+                      f" · {t['jobs']} total\n")
+              f.write(f"- {h['sources_ok']}/{h['sources_ok'] + h['sources_failed']}"
+                      f" sources responded in {h['duration_s']}s\n")
+              bad = [s for s in h["sources"] if not s["ok"]]
+              empty = [s for s in h["sources"] if s["ok"] and s["jobs"] == 0]
+              for s in bad:
+                  f.write(f"  - ❌ `{s['source']}` — {s['error'][:120]}\n")
+              for s in empty:
+                  f.write(f"  - ⚠️ `{s['source']}` returned 0 jobs\n")
+          PY

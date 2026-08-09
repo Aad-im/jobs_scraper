@@ -1,0 +1,428 @@
+# ---------------------------------------------------------------------------
+# Candidate profile — drives the "Top picks" shortlist (src/fit.py).
+#
+# Derived from Aadi Malaviya's resume (UCLA BS Math/CS + Stats/DS minor, June
+# 2026; UCLA NLP Lab LLM interpretability; founding engineer at Ryniant; MLE at
+# Chelle AI; data analyst at Genter Capital). Edit the weights and keyword lists
+# here to re-rank the shortlist — no code changes needed.
+#
+# Location is deliberately NOT scored: the shortlist answers "is this the right
+# job for me", and where it is belongs in the location filter instead.
+# ---------------------------------------------------------------------------
+
+shortlist:
+  # A role needs at least this score (0-100) to appear under "Top picks".
+  # Below ~74 the list fills with generic "AI Engineer" reqs at companies with no
+  # ML org, which score well on the title alone and crowd out the real matches.
+  min_score: 74
+  # Hard cap on the shortlist so it stays a to-do list, not another firehose.
+  max_size: 80
+  # At most this many roles from any one company, so a single big board with 40
+  # near-identical reqs can't crowd everyone else out.
+  max_per_company: 3
+  # Full-time scores strictly higher than an internship, so on raw score alone
+  # internships all but vanish from the list. Reserve slots so the intern path
+  # stays a usable list of its own when you filter the picks by role type.
+  reserve_intern: 15
+
+weights:
+  role: 45          # how close the role itself is to what he does
+  employer: 25      # frontier lab > big tech > AI infra > other
+  skills: 20        # concrete stack overlap found in title/description
+  stage: 10         # new-grad vs intern vs quietly-senior
+  freshness: 10     # recent postings are the ones still open
+
+# ---- 1. Role match --------------------------------------------------------
+# First tier whose keywords hit the title wins; description-only hits score half.
+role_tiers:
+  core:             # bullseye — his exact background
+    score: 45
+    keywords:
+      - "machine learning engineer"
+      - "ml engineer"
+      - "mle"
+      - "applied scientist"
+      - "applied science"
+      - "ai engineer"
+      - "artificial intelligence engineer"
+      - "research engineer"
+      - "member of technical staff"
+      - "llm"
+      - "large language model"
+      - "foundation model"
+      - "generative ai"
+      - "genai"
+      - "nlp"
+      - "natural language"
+      - "deep learning"
+      - "interpretability"
+      - "alignment"
+      - "ai safety"
+      - "model evaluation"
+      - "evals"
+      - "ai resident"
+      - "ai/ml"
+      - "machine learning"
+  strong:
+    score: 34
+    keywords:
+      - "data scientist"
+      - "data science"
+      - "ml infra"
+      - "ml platform"
+      - "ml systems"
+      - "ai infrastructure"
+      - "ai platform"
+      - "mlops"
+      - "research scientist"
+      - "ai product"
+      - "forward deployed"
+      - "solutions engineer, ai"
+      - "agent"
+      - "recommendation"
+      - "search engineer"
+      - "ranking"
+      - "personalization"
+  adjacent:
+    score: 24
+    keywords:
+      - "software engineer"
+      - "software development engineer"
+      - "backend"
+      - "back end"
+      - "back-end"
+      - "full stack"
+      - "full-stack"
+      - "distributed systems"
+      - "platform engineer"
+      - "infrastructure engineer"
+      - "data engineer"
+      - "analytics engineer"
+      - "data platform"
+      - "api engineer"
+      - "cloud engineer"
+  weak:
+    score: 12
+    keywords:
+      - "developer"
+      - "programmer"
+      - "product engineer"
+      - "systems engineer"
+      - "business intelligence"
+      - "data analyst"
+      - "quantitative"
+
+# Subtracted after the tier score — these are things he has no background in.
+role_penalties:
+  - {points: 30, keywords: ["asic", "fpga", "rtl", "vlsi", "silicon", "physical design",
+                            "analog design", "verification engineer", "firmware",
+                            "embedded", "mechanical engineer", "electrical engineer",
+                            "process engineer", "manufacturing", "chip design",
+                            "semiconductor", "wafer", "lithography", "optical"]}
+  - {points: 22, keywords: ["clinical", "biolog", "chemist", "laboratory", "pharma",
+                            "regulatory", "actuarial", "audit", "tax ", "supply chain",
+                            "logistics", "civil engineer", "aerospace structure"]}
+  - {points: 14, keywords: ["trader", "trading", "quant research", "portfolio manager"]}
+  - {points: 10, keywords: ["frontend engineer", "front-end engineer", "mobile engineer",
+                            "ios engineer", "android engineer", "game engineer",
+                            "gameplay", "qa engineer", "test engineer", "salesforce developer"]}
+
+# ---- 2. Employer tier -----------------------------------------------------
+employer_scores:
+  frontier_lab: 25
+  big_tech: 21
+  ai_infra: 19
+  tech: 12
+  quant: 4
+  "": 6              # unknown / aggregator-only company
+
+# Aggregator feeds carry no tier, so well-known employers are tiered by name.
+# Matched on a normalized (lowercased, suffix-stripped) company name.
+company_tiers:
+  frontier_lab:
+    - anthropic
+    - openai
+    - google deepmind
+    - deepmind
+    - xai
+    - mistral
+    - mistral ai
+    - cohere
+    - thinking machines
+    - thinking machines lab
+    - physical intelligence
+    - safe superintelligence
+    - reflection ai
+    - inflection ai
+    - ai2
+    - allen institute for ai
+    - eleutherai
+    - goodfire
+    - imbue
+    - sesame
+  big_tech:
+    - google
+    - alphabet
+    - meta
+    - meta platforms
+    - facebook
+    - amazon
+    - amazon web services
+    - aws
+    - microsoft
+    - apple
+    - nvidia
+    - netflix
+    - tesla
+    - salesforce
+    - adobe
+    - intel
+    - ibm
+    - oracle
+    - qualcomm
+    - amd
+    - advanced micro devices
+    - broadcom
+    - cisco
+    - uber
+    - lyft
+    - airbnb
+    - linkedin
+    - paypal
+    - ebay
+    - snap
+    - snapchat
+    - bytedance
+    - tiktok
+    - servicenow
+    - workday
+    - intuit
+    - vmware
+    - dell
+    - hewlett packard enterprise
+    - hp
+    - sap
+    - siemens
+    - samsung
+    - sony
+    - visa
+    - mastercard
+    - waymo
+    - x
+    - twitter
+  ai_infra:
+    - databricks
+    - snowflake
+    - scale ai
+    - scale
+    - cursor
+    - anysphere
+    - perplexity
+    - perplexity ai
+    - cognition
+    - cognition ai
+    - sierra
+    - sierra ai
+    - elevenlabs
+    - eleven labs
+    - hugging face
+    - together ai
+    - fireworks ai
+    - baseten
+    - modal
+    - modal labs
+    - langchain
+    - llamaindex
+    - weights & biases
+    - weights and biases
+    - pinecone
+    - weaviate
+    - chroma
+    - runway
+    - runwayml
+    - suno
+    - luma ai
+    - character ai
+    - glean
+    - harvey
+    - abridge
+    - openevidence
+    - decagon
+    - mercor
+    - cresta
+    - writer
+    - contextual ai
+    - vast data
+    - lambda labs
+    - crusoe
+    - coreweave
+    - groq
+    - cerebras
+    - sambanova
+    - tenstorrent
+    - etched
+    - browserbase
+    - clay
+    - sourcegraph
+  tech:
+    - stripe
+    - figma
+    - notion
+    - linear
+    - ramp
+    - brex
+    - plaid
+    - coinbase
+    - robinhood
+    - block
+    - square
+    - shopify
+    - spotify
+    - pinterest
+    - reddit
+    - discord
+    - roblox
+    - unity
+    - epic games
+    - riot games
+    - doordash
+    - instacart
+    - datadog
+    - cloudflare
+    - mongodb
+    - elastic
+    - hashicorp
+    - confluent
+    - gitlab
+    - github
+    - atlassian
+    - asana
+    - dropbox
+    - duolingo
+    - twilio
+    - zoom
+    - palantir
+    - samsara
+    - affirm
+    - chime
+    - gusto
+    - rippling
+    - vercel
+    - supabase
+    - anduril
+    - spacex
+    - rivian
+    - zoox
+    - nuro
+    - applied intuition
+  quant:
+    - jane street
+    - two sigma
+    - citadel
+    - citadel securities
+    - jump trading
+    - hudson river trading
+    - imc
+    - imc trading
+    - optiver
+    - drw
+    - sig
+    - susquehanna
+    - de shaw
+    - d. e. shaw
+    - point72
+    - millennium
+    - akuna capital
+    - five rings
+
+# ---- 3. Skill overlap -----------------------------------------------------
+# Each distinct hit in title + department + description adds `points`, capped by
+# the `skills` weight. Reflects the resume's actual stack.
+skills:
+  points_per_hit: 3
+  keywords:
+    - pytorch
+    - tensorflow
+    - jax
+    - transformer
+    - hugging face
+    - huggingface
+    - llm
+    - fine-tun
+    - finetun
+    - lora
+    - peft
+    - vllm
+    - rag
+    - retrieval-augmented
+    - retrieval augmented
+    - embedding
+    - vector database
+    - langchain
+    - langgraph
+    - prompt engineering
+    - agentic
+    - ai agent
+    - evaluation harness
+    - interpretability
+    - sparse autoencoder
+    - activation
+    - inference optimization
+    - distributed training
+    - gpu
+    - cuda
+    - python
+    - fastapi
+    - flask
+    - django
+    - postgres
+    - postgresql
+    - redis
+    - sql
+    - docker
+    - kubernetes
+    - aws
+    - sagemaker
+    - gcp
+    - google cloud
+    - cloud run
+    - ci/cd
+    - github actions
+    - spark
+    - airflow
+    - pandas
+    - numpy
+    - scikit-learn
+    - react
+    - typescript
+    - microservice
+    - rest api
+
+# ---- 4. Stage / eligibility ----------------------------------------------
+stage:
+  new_grad: 10       # graduated June 2026 — full-time is the primary target
+  intern: 4          # kept as a fallback path, ranked below full-time
+  # Bonus when the posting names a class year he qualifies for.
+  target_years: [2026, 2027]
+  target_year_bonus: 2
+  penalties:
+    phd: 12          # "PhD required/preferred" — he has a BS
+    masters: 3
+    years_3plus: 10  # a 3+ year experience bar in the body
+  # Surfaced as a warning chip on the card rather than a hard filter.
+  flag_keywords:
+    phd: ["ph.d", "phd", "doctorate", "doctoral"]
+    masters: ["master's degree", "masters degree", "ms degree", "m.s. degree"]
+    clearance: ["security clearance", "ts/sci", "top secret", "polygraph"]
+    citizenship: ["us citizen", "u.s. citizen", "citizenship required"]
+
+# ---- 5. Freshness ---------------------------------------------------------
+# Days since posting -> score. First matching bucket wins.
+freshness:
+  buckets:
+    - {max_days: 3,  score: 10}
+    - {max_days: 7,  score: 8}
+    - {max_days: 14, score: 6}
+    - {max_days: 30, score: 3}
+    - {max_days: 60, score: 1}
+  unknown_score: 3

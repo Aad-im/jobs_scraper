@@ -1,6 +1,10 @@
 # ---------------------------------------------------------------------------
-# nasdaq-tech-jobs configuration
+# tech-jobs tracker configuration
 # Everything the pipeline needs lives here so you never edit code to tune it.
+#
+# Every ats_targets entry below was verified live (see `python -m src.discover
+# --verify`). `tier` drives shortlist weighting in src/fit.py:
+#   frontier_lab > big_tech > ai_infra > tech > "" (unknown / aggregator-only)
 # ---------------------------------------------------------------------------
 
 nasdaq_universe:
@@ -9,65 +13,227 @@ nasdaq_universe:
   # Screener export that adds industry + market cap + clean names.
   # Intersected with listed_symbols_csv so only true Nasdaq companies survive.
   enrichment_csv: "https://raw.githubusercontent.com/Ate329/top-us-stock-tickers/main/tickers/all.csv"
+  # Cache the two CSVs locally for this many hours (0 disables). They change
+  # slowly, and a cache means a bad upstream day can't take the whole run down.
+  cache_hours: 20
+  cache_dir: "data/cache"
 
 aggregators:
-  # SimplifyJobs machine-readable listings. role_type is inferred per source.
+  # SimplifyJobs-style machine-readable listings. role_type is per source.
   - name: "Simplify New Grad"
     url: "https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json"
     role_type: "new_grad"
   - name: "Simplify Internships (Summer 2026)"
     url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/.github/scripts/listings.json"
     role_type: "intern"
-    # The Simplify feed above already carries Fall/Winter/Spring off-season roles
-    # (tagged in `terms`). This community feed adds extra off-season coverage.
+  - name: "Simplify Internships (Summer 2027)"
+    url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json"
+    role_type: "intern"
+  - name: "New Grad 2026 (community)"
+    url: "https://raw.githubusercontent.com/vanshb03/New-Grad-2026/dev/.github/scripts/listings.json"
+    role_type: "new_grad"
+  # The Simplify feeds already carry Fall/Winter/Spring off-season roles (tagged
+  # in `terms`); this community feed adds extra off-season coverage.
   - name: "Off-Season Internships (community)"
     url: "https://raw.githubusercontent.com/vanshb03/Summer2027-Internships/dev/.github/scripts/listings.json"
     role_type: "intern"
+
+# Big-tech career sites with their own API (see src/sources/bigtech.py for why
+# Microsoft / Apple / Google / Meta are covered via aggregators instead).
+bigtech:
+  amazon:
+    - {name: "Amazon ML/Science", categories: ["machine-learning-science"], max_pages: 6}
+    - {name: "Amazon Data Science", categories: ["data-science"], max_pages: 3}
+    # amazon.jobs ANDs the words in base_query, so "university graduate" matches
+    # nothing. Keep the terms separate.
+    - {name: "Amazon University", base_query: "university", max_pages: 4}
+    - {name: "Amazon Graduate", base_query: "graduate", max_pages: 4}
+    - {name: "Amazon Internships", base_query: "intern", max_pages: 6}
+    - {name: "Amazon SDE I", base_query: "software development engineer I", max_pages: 4}
 
 matching:
   # Fuzzy company-name match threshold (0-100). Higher = stricter, fewer false hits.
   fuzzy_cutoff: 92
 
-# Direct ATS polling. This is the "freshness + full-detail" layer.
-# You do NOT have to fill this by hand: run `python -m src.discover` to auto-derive
-# verified slugs from the aggregator job URLs into ats_targets_auto.yaml, then
-# review it and move the good ones here. A few confident seeds are included.
-# ats options: greenhouse | lever | ashby
+# How many boards to poll at once. Each is a different host, so this is polite;
+# raise it if runs feel slow, lower it if you start seeing 429s.
+concurrency: 12
+
+# ---- Direct ATS polling: the freshness + full-detail layer -----------------
+# ats options: greenhouse | lever | ashby | workday | smartrecruiters | eightfold
+# Workday slugs are "tenant|site|wdN"; eightfold slugs are "host|domain".
 ats_targets:
-  - {ticker: "GTLB", name: "GitLab",   ats: "greenhouse", slug: "gitlab"}
-  - {ticker: "AFRM", name: "Affirm",   ats: "greenhouse", slug: "affirm"}
-  - {ticker: "APP",  name: "AppLovin", ats: "greenhouse", slug: "applovin"}
-  - {ticker: "DASH", name: "DoorDash", ats: "greenhouse", slug: "doordashusa"}
-  - {ticker: "APPN", name: "Appian",   ats: "greenhouse", slug: "appian"}
-  # ^ original starter set. Below: promoted from ats_targets_auto.yaml (discover.py),
-  #   name_confidence 100, ≥2 evidence jobs. The LCID/lucidsoftware collision the
-  #   README warns about (EV Lucid Group vs. private Lucid Software) was excluded.
-  - {ticker: "INOD", name: "Innodata",            ats: "greenhouse", slug: "innodatainc"}
-  - {ticker: "ZS",   name: "Zscaler",             ats: "greenhouse", slug: "zscaler"}
-  - {ticker: "XMTR", name: "Xometry",             ats: "greenhouse", slug: "xometry"}
-  - {ticker: "BAND", name: "Bandwidth",           ats: "greenhouse", slug: "bandwidth"}
-  - {ticker: "ALRM", name: "Alarm.com",           ats: "greenhouse", slug: "alarmcom"}
-  - {ticker: "BLLN", name: "BillionToOne",        ats: "greenhouse", slug: "billiontoone"}
-  - {ticker: "ALAB", name: "Astera Labs",         ats: "greenhouse", slug: "asteraearlycareer2026"}
-  - {ticker: "TTD",  name: "The Trade Desk",      ats: "greenhouse", slug: "thetradedesk"}
-  - {ticker: "LEGN", name: "Legend Biotech",      ats: "greenhouse", slug: "legendcareers"}
-  - {ticker: "MTCH", name: "Match",               ats: "lever",      slug: "matchgroup"}
-  - {ticker: "PI",   name: "Impinj",              ats: "greenhouse", slug: "impinjexternal"}
-  - {ticker: "SEZL", name: "Sezzle",              ats: "greenhouse", slug: "sezzle"}
-  - {ticker: "EIKN", name: "Eikon Therapeutics",  ats: "greenhouse", slug: "eikontherapeutics"}
-  - {ticker: "ALMR", name: "Alamar Biosciences",  ats: "greenhouse", slug: "alamarbiosciences"}
-  - {ticker: "TRIP", name: "TripAdvisor",         ats: "greenhouse", slug: "tripadvisor"}
-  - {ticker: "TXG",  name: "10x Genomics",        ats: "greenhouse", slug: "10xgenomics"}
-  - {ticker: "AVPT", name: "AvePoint",            ats: "greenhouse", slug: "avepoint"}
-  - {ticker: "WMG",  name: "Warner Music",        ats: "lever",      slug: "wmg"}
-  - {ticker: "AMPL", name: "Amplitude",           ats: "greenhouse", slug: "amplitude"}
-  - {ticker: "MQ",   name: "Marqeta",             ats: "greenhouse", slug: "mqreferrals"}
-  - {ticker: "CLSK", name: "CleanSpark",          ats: "lever",      slug: "cleanspark"}
-  - {ticker: "DLHC", name: "DLH",                 ats: "greenhouse", slug: "dlhcorporation"}
-  - {ticker: "CHCI", name: "Comstock Holding",    ats: "greenhouse", slug: "comstock"}
-  - {ticker: "AXSM", name: "Axsome Therapeutics", ats: "greenhouse", slug: "axsometherapeutics"}
-  - {ticker: "PSNL", name: "Personalis",          ats: "greenhouse", slug: "personalisinc"}
-  - {ticker: "GEN",  name: "Gen Digital",         ats: "ashby",      slug: "gen-digital"}
+
+  # ---------- Frontier AI labs -------------------------------------------
+  - {name: "Anthropic",            ats: greenhouse, slug: anthropic,           tier: frontier_lab}
+  - {name: "OpenAI",               ats: ashby,      slug: openai,              tier: frontier_lab}
+  - {name: "Google DeepMind",      ats: greenhouse, slug: deepmind,            tier: frontier_lab}
+  - {name: "xAI",                  ats: greenhouse, slug: xai,                 tier: frontier_lab}
+  - {name: "Cohere",               ats: ashby,      slug: cohere,              tier: frontier_lab}
+  - {name: "Thinking Machines Lab", ats: ashby,     slug: thinkingmachines,    tier: frontier_lab}
+  - {name: "Physical Intelligence", ats: ashby,     slug: physicalintelligence, tier: frontier_lab}
+  - {name: "Sesame",               ats: ashby,      slug: sesame,              tier: frontier_lab}
+  - {name: "Imbue",                ats: greenhouse, slug: imbue,               tier: frontier_lab}
+  - {name: "SambaNova Systems",    ats: greenhouse, slug: sambanovasystems,    tier: frontier_lab}
+  - {name: "Mistral AI",           ats: ashby,      slug: mistral.ai,          tier: frontier_lab}
+
+  # ---------- Big tech ----------------------------------------------------
+  # Workday tenants use relevance-ranked queries instead of a full board walk.
+  - {name: "NVIDIA", ticker: NVDA, ats: workday, slug: "nvidia|NVIDIAExternalCareerSite|wd5", tier: big_tech,
+     queries: ["new college graduate", "intern", "machine learning", "deep learning", "data scientist", "software engineer"]}
+  - {name: "Salesforce", ats: workday, slug: "salesforce|External_Career_Site|wd12", tier: big_tech,
+     queries: ["intern", "new grad", "associate machine learning", "associate software engineer", "data scientist"]}
+  - {name: "Adobe", ticker: ADBE, ats: workday, slug: "adobe|external_experienced|wd5", tier: big_tech,
+     queries: ["intern", "university graduate", "machine learning", "data scientist"]}
+  - {name: "Cisco", ticker: CSCO, ats: workday, slug: "cisco|Cisco_Careers|wd5", tier: big_tech,
+     queries: ["intern", "new graduate", "machine learning", "data scientist"]}
+  - {name: "eBay", ticker: EBAY, ats: workday, slug: "ebay|apply|wd5", tier: big_tech,
+     queries: ["intern", "new grad", "machine learning", "applied research"]}
+  - {name: "PayPal", ticker: PYPL, ats: workday, slug: "paypal|jobs|wd1", tier: big_tech}
+  - {name: "Netflix", ticker: NFLX, ats: eightfold, slug: "explore.jobs.netflix.net|netflix.com", tier: big_tech}
+  - {name: "Workday", ats: workday, slug: "workday|Workday|wd5", tier: big_tech}
+  - {name: "Autodesk", ats: workday, slug: "autodesk|Ext|wd1", tier: big_tech,
+     queries: ["intern", "new grad", "machine learning", "data scientist"]}
+  - {name: "Hewlett Packard Enterprise", ats: workday, slug: "hpe|Jobsathpe|wd5", tier: big_tech,
+     queries: ["intern", "graduate", "machine learning", "data scientist"]}
+  - {name: "Micron", ticker: MU, ats: workday, slug: "micron|External|wd1", tier: big_tech,
+     queries: ["intern", "university", "machine learning", "data scientist"]}
+  - {name: "Analog Devices", ticker: ADI, ats: workday, slug: "analogdevices|External|wd1", tier: big_tech,
+     queries: ["intern", "new grad", "machine learning", "software engineer"]}
+  - {name: "KLA", ticker: KLAC, ats: workday, slug: "kla|Search|wd1", tier: big_tech,
+     queries: ["intern", "college", "machine learning", "software engineer"]}
+  - {name: "Cadence", ticker: CDNS, ats: workday, slug: "cadence|External_Careers|wd1", tier: big_tech,
+     queries: ["intern", "university", "machine learning", "software engineer"]}
+  - {name: "Marvell", ticker: MRVL, ats: workday, slug: "marvell|MarvellCareers2|wd1", tier: big_tech}
+  - {name: "RELX", ats: workday, slug: "relx|relx|wd3", tier: tech,
+     queries: ["intern", "graduate", "machine learning", "data scientist"]}
+  - {name: "Visa", ticker: V, ats: smartrecruiters, slug: Visa, tier: big_tech}
+
+  # ---------- AI infrastructure / tooling ---------------------------------
+  - {name: "Databricks",           ats: greenhouse, slug: databricks,          tier: ai_infra}
+  - {name: "Scale AI",             ats: greenhouse, slug: scaleai,             tier: ai_infra}
+  - {name: "Cursor (Anysphere)",   ats: ashby,      slug: cursor,              tier: ai_infra}
+  - {name: "Cognition",            ats: ashby,      slug: cognition,           tier: ai_infra}
+  - {name: "Sierra",               ats: ashby,      slug: sierra,              tier: ai_infra}
+  - {name: "ElevenLabs",           ats: ashby,      slug: elevenlabs,          tier: ai_infra}
+  - {name: "Decagon",              ats: ashby,      slug: decagon,             tier: ai_infra}
+  - {name: "Mercor",               ats: ashby,      slug: mercor,              tier: ai_infra}
+  - {name: "Baseten",              ats: ashby,      slug: baseten,             tier: ai_infra}
+  - {name: "Modal",                ats: ashby,      slug: modal,               tier: ai_infra}
+  - {name: "Fireworks AI",         ats: ashby,      slug: fireworks,           tier: ai_infra}
+  - {name: "Together AI",          ats: greenhouse, slug: togetherai,          tier: ai_infra}
+  - {name: "Suno",                 ats: ashby,      slug: suno,                tier: ai_infra}
+  - {name: "Browserbase",          ats: ashby,      slug: browserbase,         tier: ai_infra}
+  - {name: "Abridge",              ats: ashby,      slug: abridge,             tier: ai_infra}
+  - {name: "OpenEvidence",         ats: ashby,      slug: openevidence,        tier: ai_infra}
+  - {name: "Cresta",               ats: greenhouse, slug: cresta,              tier: ai_infra}
+  - {name: "Tenstorrent",          ats: greenhouse, slug: tenstorrent,         tier: ai_infra}
+  - {name: "Lightmatter",          ats: greenhouse, slug: lightmatter,         tier: ai_infra}
+  - {name: "Sigma Computing",      ats: greenhouse, slug: sigmacomputing,      tier: ai_infra}
+  - {name: "Turing",               ats: greenhouse, slug: turing,              tier: ai_infra}
+  - {name: "Invisible Technologies", ats: greenhouse, slug: invisibletech,     tier: ai_infra}
+  - {name: "Snowflake",            ats: ashby,      slug: snowflake,           tier: ai_infra}
+  - {name: "Cerebras",             ats: ashby,      slug: cerebras,            tier: ai_infra}
+  - {name: "Lambda",               ats: ashby,      slug: lambda,              tier: ai_infra}
+  - {name: "Harvey",               ats: ashby,      slug: harvey,              tier: ai_infra}
+  - {name: "Glean",                ats: greenhouse, slug: gleanwork,           tier: ai_infra}
+  - {name: "Applied Intuition",    ats: ashby,      slug: applied,             tier: ai_infra}
+  - {name: "Confluent",  ticker: CFLT, ats: ashby,  slug: confluent,           tier: ai_infra}
+
+  # ---------- Robotics / defense (US-citizen roles suit this profile) -----
+  - {name: "Anduril",              ats: greenhouse, slug: andurilindustries,   tier: tech}
+  - {name: "SpaceX",               ats: greenhouse, slug: spacex,              tier: tech}
+  - {name: "Shield AI",            ats: lever,      slug: shieldai,            tier: tech}
+  - {name: "Saronic",              ats: ashby,      slug: saronic,             tier: tech}
+  - {name: "Zoox",                 ats: lever,      slug: zoox,                tier: tech}
+  # NB: greenhouse:figure is the *fintech* Figure; figureai is the robotics one.
+  - {name: "Figure AI",            ats: greenhouse, slug: figureai,            tier: tech}
+  - {name: "Axon",     ticker: AXON, ats: greenhouse, slug: axon,              tier: tech}
+
+  # ---------- Established tech --------------------------------------------
+  - {name: "Stripe",               ats: greenhouse, slug: stripe,              tier: tech}
+  - {name: "Waymo",                ats: greenhouse, slug: waymo,               tier: tech}
+  - {name: "Palantir",  ticker: PLTR, ats: lever,   slug: palantir,            tier: tech}
+  - {name: "Figma",                ats: greenhouse, slug: figma,               tier: tech}
+  - {name: "Notion",               ats: ashby,      slug: notion,              tier: tech}
+  - {name: "Linear",               ats: ashby,      slug: linear,              tier: tech}
+  - {name: "Ramp",                 ats: ashby,      slug: ramp,                tier: tech}
+  - {name: "Airbnb",  ticker: ABNB, ats: greenhouse, slug: airbnb,             tier: tech}
+  - {name: "Datadog", ticker: DDOG, ats: greenhouse, slug: datadog,            tier: tech}
+  - {name: "Cloudflare", ticker: NET, ats: greenhouse, slug: cloudflare,       tier: tech}
+  - {name: "MongoDB", ticker: MDB, ats: greenhouse, slug: mongodb,             tier: tech}
+  - {name: "Elastic",  ticker: ESTC, ats: greenhouse, slug: elastic,           tier: tech}
+  - {name: "Pinterest", ticker: PINS, ats: greenhouse, slug: pinterest,        tier: tech}
+  - {name: "Reddit",  ticker: RDDT, ats: greenhouse, slug: reddit,             tier: tech}
+  - {name: "Roblox",  ticker: RBLX, ats: greenhouse, slug: roblox,             tier: tech}
+  - {name: "Coinbase", ticker: COIN, ats: greenhouse, slug: coinbase,          tier: tech}
+  - {name: "Robinhood", ticker: HOOD, ats: greenhouse, slug: robinhood,        tier: tech}
+  - {name: "DoorDash", ticker: DASH, ats: greenhouse, slug: doordashusa,       tier: tech}
+  - {name: "Instacart", ticker: CART, ats: greenhouse, slug: instacart,        tier: tech}
+  - {name: "Lyft",    ticker: LYFT, ats: greenhouse, slug: lyft,               tier: tech}
+  - {name: "Samsara", ticker: IOT,  ats: greenhouse, slug: samsara,            tier: tech}
+  - {name: "Affirm",  ticker: AFRM, ats: greenhouse, slug: affirm,             tier: tech}
+  - {name: "GitLab",  ticker: GTLB, ats: greenhouse, slug: gitlab,             tier: tech}
+  - {name: "Duolingo", ticker: DUOL, ats: greenhouse, slug: duolingo,          tier: tech}
+  - {name: "Dropbox", ticker: DBX,  ats: greenhouse, slug: dropbox,            tier: tech}
+  - {name: "Discord",              ats: greenhouse, slug: discord,             tier: tech}
+  - {name: "Asana",   ticker: ASAN, ats: greenhouse, slug: asana,              tier: tech}
+  - {name: "Airtable",             ats: greenhouse, slug: airtable,            tier: tech}
+  - {name: "Brex",                 ats: greenhouse, slug: brex,                tier: tech}
+  - {name: "Chime",   ticker: CHYM, ats: greenhouse, slug: chime,              tier: tech}
+  - {name: "Gusto",                ats: greenhouse, slug: gusto,               tier: tech}
+  - {name: "Vercel",               ats: greenhouse, slug: vercel,              tier: tech}
+  - {name: "Mixpanel",             ats: greenhouse, slug: mixpanel,            tier: tech}
+  - {name: "Amplitude", ticker: AMPL, ats: greenhouse, slug: amplitude,        tier: tech}
+  - {name: "Epic Games",           ats: greenhouse, slug: epicgames,           tier: tech}
+  - {name: "Nuro",                 ats: greenhouse, slug: nuro,                tier: tech}
+  - {name: "Match",   ticker: MTCH, ats: lever,     slug: matchgroup,          tier: tech}
+  - {name: "Warner Music", ticker: WMG, ats: lever, slug: wmg,                 tier: tech}
+  - {name: "Spotify", ticker: SPOT, ats: lever,     slug: spotify,             tier: tech}
+  - {name: "Twitch",               ats: greenhouse, slug: twitch,              tier: tech}
+  - {name: "Verkada",              ats: greenhouse, slug: verkada,             tier: tech}
+  - {name: "Grafana Labs",         ats: greenhouse, slug: grafanalabs,         tier: tech}
+  - {name: "Mercury",              ats: greenhouse, slug: mercury,             tier: tech}
+  - {name: "Benchling",            ats: ashby,      slug: benchling,           tier: tech}
+  - {name: "Planet Labs", ticker: PL, ats: greenhouse, slug: planetlabs,       tier: tech}
+  - {name: "Palo Alto Networks", ticker: PANW, ats: workday,
+     slug: "paloaltonetworks|panwexternalcareers|wd5", tier: tech,
+     queries: ["intern", "new grad", "machine learning", "software engineer"]}
+  - {name: "Applied Materials", ticker: AMAT, ats: workday, slug: "amat|External|wd1", tier: tech,
+     queries: ["intern", "college", "machine learning", "data scientist"]}
+
+  # ---------- Quant / trading (deprioritized in the shortlist) ------------
+  - {name: "Jump Trading",         ats: greenhouse, slug: jumptrading,         tier: quant}
+  - {name: "IMC Trading",          ats: greenhouse, slug: imc,                 tier: quant}
+  - {name: "Jane Street",          ats: greenhouse, slug: janestreet,          tier: quant}
+  - {name: "DRW",                  ats: greenhouse, slug: drweng,              tier: quant}
+  - {name: "Optiver",              ats: greenhouse, slug: optiverprivate,      tier: quant}
+
+  # ---------- Nasdaq small/mid caps found by src.discover ------------------
+  - {name: "Innodata",            ticker: INOD, ats: greenhouse, slug: innodatainc}
+  - {name: "Zscaler",             ticker: ZS,   ats: greenhouse, slug: zscaler}
+  - {name: "Xometry",             ticker: XMTR, ats: greenhouse, slug: xometry}
+  - {name: "Bandwidth",           ticker: BAND, ats: greenhouse, slug: bandwidth}
+  - {name: "Alarm.com",           ticker: ALRM, ats: greenhouse, slug: alarmcom}
+  - {name: "BillionToOne",        ticker: BLLN, ats: greenhouse, slug: billiontoone}
+  - {name: "Astera Labs",         ticker: ALAB, ats: greenhouse, slug: asteraearlycareer2026}
+  - {name: "The Trade Desk",      ticker: TTD,  ats: greenhouse, slug: thetradedesk}
+  - {name: "Legend Biotech",      ticker: LEGN, ats: greenhouse, slug: legendcareers}
+  - {name: "Impinj",              ticker: PI,   ats: greenhouse, slug: impinjexternal}
+  - {name: "Sezzle",              ticker: SEZL, ats: greenhouse, slug: sezzle}
+  - {name: "Eikon Therapeutics",  ticker: EIKN, ats: greenhouse, slug: eikontherapeutics}
+  - {name: "Alamar Biosciences",  ticker: ALMR, ats: greenhouse, slug: alamarbiosciences}
+  - {name: "TripAdvisor",         ticker: TRIP, ats: greenhouse, slug: tripadvisor}
+  - {name: "10x Genomics",        ticker: TXG,  ats: greenhouse, slug: 10xgenomics}
+  - {name: "AvePoint",            ticker: AVPT, ats: greenhouse, slug: avepoint}
+  - {name: "Marqeta",             ticker: MQ,   ats: greenhouse, slug: mqreferrals}
+  - {name: "CleanSpark",          ticker: CLSK, ats: lever,      slug: cleanspark}
+  - {name: "DLH",                 ticker: DLHC, ats: greenhouse, slug: dlhcorporation}
+  - {name: "Axsome Therapeutics", ticker: AXSM, ats: greenhouse, slug: axsometherapeutics}
+  - {name: "Personalis",          ticker: PSNL, ats: greenhouse, slug: personalisinc}
+  - {name: "Gen Digital",         ticker: GEN,  ats: ashby,      slug: gen-digital}
+  - {name: "AppLovin",            ticker: APP,  ats: greenhouse, slug: applovin}
+  - {name: "Appian",              ticker: APPN, ats: greenhouse, slug: appian}
   # Extend further via `python -m src.discover`.
 
 # ---- Role classification keywords (case-insensitive substring match) ----
@@ -76,35 +242,109 @@ classify:
   early_career_any:
     - "new grad"
     - "new graduate"
+    - "new college grad"
     - "university grad"
+    - "university hire"
+    - "college grad"
     - "early career"
+    - "early-career"
     - "entry level"
     - "entry-level"
     - "campus"
     - "intern"
     - "internship"
     - "co-op"
+    - "co op"
     - "graduate program"
     - "graduate engineer"
+    - "rotational"
+    - "apprentice"
     - "associate "
+    # Bare "resident"/"fellow" are avoided on purpose: "resident" is a substring
+    # of "president", and a "Technical Fellow" is the most senior IC there is.
+    - "residency"
+    - "ai resident"
+    - "research resident"
+    - "fellowship"
     - " i "
     - " 1 "
     - "junior"
+    - "level 1"
+    - "l1 "
   # Titles containing these are dropped even if they matched above (too senior).
   seniority_block:
     - "senior"
     - "staff"
     - "principal"
     - "lead "
+    - " lead"
     - "manager"
     - "director"
     - "sr."
     - "sr "
+    - "snr"
     - " ii"
     - " iii"
     - " iv"
+    - " v "
     - "vp "
+    - "vice president"
     - "head of"
+    - "chief"
+    - "distinguished"
+    - "fellow engineer"
+    - "technical fellow"
+    - "research fellow"
+    - "postdoc"
+    - "post-doc"
+    - "architect"
+    - "expert"
+    - "experienced"
+    - "level 2"
+    - "level 3"
+    - "l3 "
+    - "l4 "
+    - "l5 "
+  # Non-technical / non-target departments dropped from direct-ATS boards, which
+  # (unlike the aggregator feeds) list every job the company has open.
+  function_block:
+    - "sales"
+    - "account executive"
+    - "account manager"
+    - "recruit"
+    - "talent acquisition"
+    - "people partner"
+    - "human resources"
+    - "marketing"
+    - "public relations"
+    - "communications"
+    - "customer success"
+    - "customer support"
+    - "technical support"
+    - "solutions consultant"
+    - "office manager"
+    - "executive assistant"
+    - "paralegal"
+    - "counsel"
+    - "attorney"
+    - "accountant"
+    - "bookkeep"
+    - "payroll"
+    - "warehouse"
+    - "driver"
+    - "technician"
+    - "nurse"
+    - "physician"
+    - "clinical research associate"
+    - "ai tutor"
+    - "ai trainer"
+    - "data annotat"
+    - "content writer"
+    - "copywriter"
+    - "teacher"
+    - "barista"
+    - "retail"
+    - "security guard"
 
   # Track detection. First matching track wins (order matters).
   tracks:
@@ -118,32 +358,65 @@ classify:
       - "research engineer"
       - "deep learning"
       - "nlp"
+      - "natural language"
       - "computer vision"
       - "ai engineer"
       - "ai/ml"
+      - "ai & ml"
       - "a.i."
       - "artificial intelligence"
       - "ml infra"
       - "ml platform"
+      - "ml systems"
       - "generative ai"
+      - "genai"
       - "llm"
+      - "large language model"
+      - "foundation model"
       - "ai resident"
+      - "ai research"
+      - "interpretability"
+      - "alignment"
+      - "ai safety"
+      - "perception"
+      - "recommendation"
+      - "reinforcement learning"
+      - "speech"
+      - "member of technical staff"
     data_eng:
       - "data engineer"
       - "analytics engineer"
       - "data platform"
+      - "data infrastructure"
+      - "business intelligence"
+      - "data analyst"
     swe:
       - "software engineer"
+      - "software development engineer"
       - "swe"
       - "backend"
+      - "back end"
+      - "back-end"
       - "front end"
       - "frontend"
+      - "front-end"
       - "full stack"
       - "full-stack"
       - "developer"
+      - "platform engineer"
+      - "infrastructure engineer"
+      - "site reliability"
+      - "devops"
+      - "systems engineer"
+      - "security engineer"
+      - "mobile engineer"
+      - "ios engineer"
+      - "android engineer"
     quant:
       - "quant"
       - "trading"
+      - "trader"
+      - "actuarial"
     hardware:
       - "hardware"
       - "asic"
@@ -151,12 +424,26 @@ classify:
       - "silicon"
       - "embedded"
       - "firmware"
+      - "verification engineer"
+      - "physical design"
+      - "analog design"
+      - "rtl"
+      - "vlsi"
+      - "chip design"
+      - "mechanical engineer"
+      - "electrical engineer"
+      - "process engineer"
+      - "manufacturing"
 
 output:
   csv_path: "data/jobs.csv"
   html_path: "docs/index.html"
   state_path: "data/seen.json"
+  health_path: "data/health.json"
   # A job stays on the board this many days after it first disappears from sources.
   keep_stale_days: 5
+  # Refuse to overwrite the site if a run collects fewer than this many roles —
+  # that means sources broke, not that the market emptied out.
+  min_jobs_to_publish: 500
   # Owner name shown in the page header. Cosmetic.
-  owner: "your job board"
+  owner: "Aadi's job board"
