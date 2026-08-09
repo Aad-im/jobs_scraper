@@ -273,6 +273,34 @@ def test_shortlist_backfills_when_few_interns_qualify(scorer):
     assert len(picked) == scorer.shortlist_cfg["max_size"]
 
 
+def test_shortlist_caps_research_titles(scorer):
+    """Frontier labs title nearly everything "Research Engineer"; unchecked they
+    took 40% of the list."""
+    jobs = []
+    for i in range(200):
+        j = _job(title=f"Research Engineer, Team {i}", company_name=f"Lab{i}",
+                 employer_tier="frontier_lab")
+        j.update(fit=95, key=f"res{i}")
+        jobs.append(j)
+    for i in range(200):
+        j = _job(title=f"Machine Learning Engineer {i}", company_name=f"Co{i}",
+                 employer_tier="ai_infra")
+        j.update(fit=90, key=f"mle{i}")
+        jobs.append(j)
+    picked = scorer.shortlist(jobs)
+    n_res = sum(1 for j in picked if "research" in j["title"].lower())
+    assert n_res == scorer.shortlist_cfg["max_research"]
+    assert len(picked) == scorer.shortlist_cfg["max_size"]
+
+
+def test_applied_role_outranks_research_role_at_same_employer(scorer):
+    research = scorer.score(_job(title="Research Engineer, Post-Training",
+                                 company_name="Anthropic", employer_tier="frontier_lab"))
+    applied = scorer.score(_job(title="Machine Learning Engineer, Product",
+                                company_name="Anthropic", employer_tier="frontier_lab"))
+    assert applied.score > research.score
+
+
 def test_shortlist_excludes_inactive_and_low_scores(scorer):
     good = _job(title="ML Engineer", company_name="OpenAI", employer_tier="frontier_lab")
     good.update(fit=95, key="a")

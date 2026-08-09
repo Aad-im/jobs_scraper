@@ -1,10 +1,10 @@
 {
- "generated": 1786315768,
- "duration_s": 27.6,
+ "generated": 1786316756,
+ "duration_s": 25.0,
  "aborted": false,
  "totals": {
-  "jobs": 26340,
-  "active": 6822,
+  "jobs": 26339,
+  "active": 6821,
   "shortlisted": 80
  },
  "sources_ok": 151,
@@ -18,14 +18,14 @@
    "error": ""
   },
   {
-   "source": "Simplify Internships (Summer 2027)",
+   "source": "Simplify Internships (Summer 2026)",
    "kind": "aggregator",
    "jobs": 14480,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Simplify Internships (Summer 2026)",
+   "source": "Simplify Internships (Summer 2027)",
    "kind": "aggregator",
    "jobs": 14480,
    "ok": true,

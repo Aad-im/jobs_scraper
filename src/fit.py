@@ -184,14 +184,22 @@ class FitScorer:
         """
         cfg = self.shortlist_cfg
         max_size, reserve = cfg["max_size"], cfg.get("reserve_intern", 0)
+        max_research = cfg.get("max_research")
+        research_kw = [k.lower() for k in cfg.get("research_keywords") or []]
         pool = sorted(
             (j for j in jobs if j.get("active") and j.get("fit", 0) >= cfg["min_score"]),
             key=lambda j: (-j["fit"], -int(j.get("date_posted") or 0)),
         )
         per_company: dict[str, int] = {}
         chosen: dict[str, dict] = {}
+        n_research = 0
+
+        def is_research(job: dict) -> bool:
+            title = job.get("title", "").lower()
+            return any(k in title for k in research_kw)
 
         def take(candidates, limit: int) -> None:
+            nonlocal n_research
             for job in candidates:
                 if len(chosen) >= limit:
                     return
@@ -200,7 +208,11 @@ class FitScorer:
                 key = normalize(job.get("company_name", "")) or job.get("company_name", "")
                 if per_company.get(key, 0) >= cfg["max_per_company"]:
                     continue
+                research = is_research(job)
+                if research and max_research is not None and n_research >= max_research:
+                    continue
                 per_company[key] = per_company.get(key, 0) + 1
+                n_research += research
                 chosen[job["key"]] = job
 
         interns = [j for j in pool if j.get("role_type") == "intern"]

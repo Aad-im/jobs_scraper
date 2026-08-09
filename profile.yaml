@@ -24,6 +24,17 @@ shortlist:
   # internships all but vanish from the list. Reserve slots so the intern path
   # stays a usable list of its own when you filter the picks by role type.
   reserve_intern: 15
+  # "Research Engineer" is the default title for half of every frontier lab's
+  # board, and those roles skew PhD-track. Unchecked they took 40% of the list
+  # and 11 of the top 20. Keep the strongest ones, cap the rest.
+  max_research: 16
+  research_keywords:
+    - "research engineer"
+    - "research scientist"
+    - "researcher"
+    - "research intern"
+    - "research associate"
+    - "research fellow"
 
 weights:
   role: 45          # how close the role itself is to what he does
@@ -123,6 +134,11 @@ role_penalties:
                             "regulatory", "actuarial", "audit", "tax ", "supply chain",
                             "logistics", "civil engineer", "aerospace structure"]}
   - {points: 14, keywords: ["trader", "trading", "quant research", "portfolio manager"]}
+  # Not off-profile — his research background is real — but a pure research
+  # title is a longer shot for a BS new grad than the applied-engineering role
+  # next to it on the same board, so it ranks below one rather than above.
+  - {points: 14, keywords: ["research engineer", "research scientist", "researcher",
+                            "research intern", "research associate"]}
   - {points: 10, keywords: ["frontend engineer", "front-end engineer", "mobile engineer",
                             "ios engineer", "android engineer", "game engineer",
                             "gameplay", "qa engineer", "test engineer", "salesforce developer"]}
