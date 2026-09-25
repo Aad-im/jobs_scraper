@@ -1,21 +1,21 @@
 {
- "generated": 1790271960,
- "duration_s": 51.1,
+ "generated": 1790358462,
+ "duration_s": 52.6,
  "aborted": false,
  "totals": {
-  "jobs": 30713,
-  "active": 10256,
+  "jobs": 30700,
+  "active": 10278,
   "shortlisted": 80
  },
- "sources_ok": 148,
- "sources_failed": 3,
+ "sources_ok": 147,
+ "sources_failed": 4,
  "sources": [
   {
-   "source": "Google DeepMind (greenhouse)",
+   "source": "Autodesk (workday)",
    "kind": "ats",
    "jobs": 0,
    "ok": false,
-   "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/deepmind/jobs?content=true"
+   "error": "HTTPError: 404 Client Error: Not Found for url: https://autodesk.wd1.myworkdayjobs.com/wday/cxs/autodesk/Ext/jobs"
   },
   {
    "source": "Marqeta (greenhouse)",
@@ -32,37 +32,44 @@
    "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/10xgenomics/jobs?content=true"
   },
   {
+   "source": "Google DeepMind (greenhouse)",
+   "kind": "ats",
+   "jobs": 0,
+   "ok": false,
+   "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/deepmind/jobs?content=true"
+  },
+  {
    "source": "Simplify New Grad",
    "kind": "aggregator",
-   "jobs": 19960,
+   "jobs": 19915,
    "ok": true,
    "error": ""
   },
   {
    "source": "Simplify Internships (Summer 2026)",
    "kind": "aggregator",
-   "jobs": 17196,
+   "jobs": 17191,
    "ok": true,
    "error": ""
   },
   {
    "source": "Simplify Internships (Summer 2027)",
    "kind": "aggregator",
-   "jobs": 17196,
+   "jobs": 17191,
    "ok": true,
    "error": ""
   },
   {
    "source": "SpaceX (greenhouse)",
    "kind": "ats",
-   "jobs": 2566,
+   "jobs": 2592,
    "ok": true,
    "error": ""
   },
   {
    "source": "Anduril (greenhouse)",
    "kind": "ats",
-   "jobs": 2363,
+   "jobs": 2372,
    "ok": true,
    "error": ""
   },
@@ -76,49 +83,49 @@
   {
    "source": "Databricks (greenhouse)",
    "kind": "ats",
-   "jobs": 884,
+   "jobs": 888,
    "ok": true,
    "error": ""
   },
   {
    "source": "OpenAI (ashby)",
    "kind": "ats",
-   "jobs": 825,
+   "jobs": 832,
    "ok": true,
    "error": ""
   },
   {
    "source": "Stripe (greenhouse)",
    "kind": "ats",
-   "jobs": 694,
+   "jobs": 698,
    "ok": true,
    "error": ""
   },
   {
    "source": "Anthropic (greenhouse)",
    "kind": "ats",
-   "jobs": 628,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Amazon ML/Science",
-   "kind": "bigtech",
-   "jobs": 567,
+   "jobs": 624,
    "ok": true,
    "error": ""
   },
   {
    "source": "Shield AI (lever)",
    "kind": "ats",
-   "jobs": 539,
+   "jobs": 576,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Amazon ML/Science",
+   "kind": "bigtech",
+   "jobs": 563,
    "ok": true,
    "error": ""
   },
   {
    "source": "Axon (greenhouse)",
    "kind": "ats",
-   "jobs": 514,
+   "jobs": 510,
    "ok": true,
    "error": ""
   },
@@ -132,14 +139,14 @@
   {
    "source": "DoorDash (greenhouse)",
    "kind": "ats",
-   "jobs": 462,
+   "jobs": 457,
    "ok": true,
    "error": ""
   },
   {
    "source": "Datadog (greenhouse)",
    "kind": "ats",
-   "jobs": 447,
+   "jobs": 449,
    "ok": true,
    "error": ""
   },
@@ -160,12 +167,19 @@
   {
    "source": "MongoDB (greenhouse)",
    "kind": "ats",
-   "jobs": 397,
+   "jobs": 398,
    "ok": true,
    "error": ""
   },
   {
    "source": "Cloudflare (greenhouse)",
+   "kind": "ats",
+   "jobs": 393,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Elastic (greenhouse)",
    "kind": "ats",
    "jobs": 382,
    "ok": true,
@@ -174,14 +188,7 @@
   {
    "source": "Zscaler (greenhouse)",
    "kind": "ats",
-   "jobs": 372,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Elastic (greenhouse)",
-   "kind": "ats",
-   "jobs": 367,
+   "jobs": 377,
    "ok": true,
    "error": ""
   },
@@ -202,49 +209,49 @@
   {
    "source": "Amazon Internships",
    "kind": "bigtech",
-   "jobs": 323,
+   "jobs": 328,
    "ok": true,
    "error": ""
   },
   {
    "source": "Palantir (lever)",
    "kind": "ats",
-   "jobs": 319,
+   "jobs": 324,
    "ok": true,
    "error": ""
   },
   {
    "source": "Applied Intuition (ashby)",
    "kind": "ats",
-   "jobs": 306,
+   "jobs": 307,
    "ok": true,
    "error": ""
   },
   {
    "source": "Harvey (ashby)",
    "kind": "ats",
-   "jobs": 302,
+   "jobs": 301,
    "ok": true,
    "error": ""
   },
   {
    "source": "Verkada (greenhouse)",
    "kind": "ats",
-   "jobs": 302,
+   "jobs": 301,
    "ok": true,
    "error": ""
   },
   {
    "source": "AvePoint (greenhouse)",
    "kind": "ats",
-   "jobs": 296,
+   "jobs": 293,
    "ok": true,
    "error": ""
   },
   {
    "source": "xAI (greenhouse)",
    "kind": "ats",
-   "jobs": 276,
+   "jobs": 277,
    "ok": true,
    "error": ""
   },
@@ -256,37 +263,37 @@
    "error": ""
   },
   {
-   "source": "Samsara (greenhouse)",
-   "kind": "ats",
-   "jobs": 253,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Roblox (greenhouse)",
    "kind": "ats",
-   "jobs": 250,
+   "jobs": 252,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Xometry (greenhouse)",
+   "source": "Samsara (greenhouse)",
    "kind": "ats",
-   "jobs": 238,
+   "jobs": 246,
    "ok": true,
    "error": ""
   },
   {
    "source": "Zoox (lever)",
    "kind": "ats",
-   "jobs": 236,
+   "jobs": 242,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Xometry (greenhouse)",
+   "kind": "ats",
+   "jobs": 240,
    "ok": true,
    "error": ""
   },
   {
    "source": "Jane Street (greenhouse)",
    "kind": "ats",
-   "jobs": 227,
+   "jobs": 228,
    "ok": true,
    "error": ""
   },
@@ -298,107 +305,107 @@
    "error": ""
   },
   {
-   "source": "ElevenLabs (ashby)",
-   "kind": "ats",
-   "jobs": 218,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Coinbase (greenhouse)",
    "kind": "ats",
-   "jobs": 214,
+   "jobs": 209,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Scale AI (greenhouse)",
+   "source": "ElevenLabs (ashby)",
    "kind": "ats",
-   "jobs": 210,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "GitLab (greenhouse)",
-   "kind": "ats",
-   "jobs": 207,
+   "jobs": 208,
    "ok": true,
    "error": ""
   },
   {
    "source": "Saronic (ashby)",
    "kind": "ats",
-   "jobs": 206,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Sierra (ashby)",
-   "kind": "ats",
-   "jobs": 204,
+   "jobs": 208,
    "ok": true,
    "error": ""
   },
   {
    "source": "Mistral AI (ashby)",
    "kind": "ats",
-   "jobs": 202,
+   "jobs": 207,
    "ok": true,
    "error": ""
   },
   {
-   "source": "NVIDIA (workday)",
+   "source": "Sierra (ashby)",
    "kind": "ats",
-   "jobs": 199,
+   "jobs": 207,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Scale AI (greenhouse)",
+   "kind": "ats",
+   "jobs": 205,
    "ok": true,
    "error": ""
   },
   {
    "source": "Palo Alto Networks (workday)",
    "kind": "ats",
-   "jobs": 198,
+   "jobs": 203,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "NVIDIA (workday)",
+   "kind": "ats",
+   "jobs": 200,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "GitLab (greenhouse)",
+   "kind": "ats",
+   "jobs": 199,
    "ok": true,
    "error": ""
   },
   {
    "source": "Micron (workday)",
    "kind": "ats",
-   "jobs": 197,
+   "jobs": 198,
    "ok": true,
    "error": ""
   },
   {
    "source": "Affirm (greenhouse)",
    "kind": "ats",
-   "jobs": 194,
+   "jobs": 186,
    "ok": true,
    "error": ""
   },
   {
    "source": "Appian (greenhouse)",
    "kind": "ats",
-   "jobs": 181,
+   "jobs": 183,
    "ok": true,
    "error": ""
   },
   {
    "source": "Lyft (greenhouse)",
    "kind": "ats",
-   "jobs": 177,
+   "jobs": 178,
    "ok": true,
    "error": ""
   },
   {
    "source": "IMC Trading (greenhouse)",
    "kind": "ats",
-   "jobs": 173,
+   "jobs": 175,
    "ok": true,
    "error": ""
   },
   {
    "source": "DRW (greenhouse)",
    "kind": "ats",
-   "jobs": 165,
+   "jobs": 166,
    "ok": true,
    "error": ""
   },
@@ -417,16 +424,23 @@
    "error": ""
   },
   {
+   "source": "Epic Games (greenhouse)",
+   "kind": "ats",
+   "jobs": 158,
+   "ok": true,
+   "error": ""
+  },
+  {
    "source": "Airbnb (greenhouse)",
    "kind": "ats",
-   "jobs": 160,
+   "jobs": 157,
    "ok": true,
    "error": ""
   },
   {
    "source": "Amazon Data Science",
    "kind": "bigtech",
-   "jobs": 158,
+   "jobs": 156,
    "ok": true,
    "error": ""
   },
@@ -438,13 +452,6 @@
    "error": ""
   },
   {
-   "source": "Reddit (greenhouse)",
-   "kind": "ats",
-   "jobs": 154,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Pinterest (greenhouse)",
    "kind": "ats",
    "jobs": 153,
@@ -452,23 +459,16 @@
    "error": ""
   },
   {
-   "source": "Epic Games (greenhouse)",
+   "source": "Reddit (greenhouse)",
    "kind": "ats",
-   "jobs": 150,
+   "jobs": 151,
    "ok": true,
    "error": ""
   },
   {
    "source": "Cisco (workday)",
    "kind": "ats",
-   "jobs": 148,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Grafana Labs (greenhouse)",
-   "kind": "ats",
-   "jobs": 148,
+   "jobs": 150,
    "ok": true,
    "error": ""
   },
@@ -482,7 +482,7 @@
   {
    "source": "Decagon (ashby)",
    "kind": "ats",
-   "jobs": 147,
+   "jobs": 146,
    "ok": true,
    "error": ""
   },
@@ -494,6 +494,20 @@
    "error": ""
   },
   {
+   "source": "Grafana Labs (greenhouse)",
+   "kind": "ats",
+   "jobs": 146,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Glean (greenhouse)",
+   "kind": "ats",
+   "jobs": 130,
+   "ok": true,
+   "error": ""
+  },
+  {
    "source": "Notion (ashby)",
    "kind": "ats",
    "jobs": 129,
@@ -501,23 +515,9 @@
    "error": ""
   },
   {
-   "source": "Glean (greenhouse)",
-   "kind": "ats",
-   "jobs": 128,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Applied Materials (workday)",
    "kind": "ats",
-   "jobs": 128,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Hewlett Packard Enterprise (workday)",
-   "kind": "ats",
-   "jobs": 126,
+   "jobs": 127,
    "ok": true,
    "error": ""
   },
@@ -536,6 +536,20 @@
    "error": ""
   },
   {
+   "source": "Hewlett Packard Enterprise (workday)",
+   "kind": "ats",
+   "jobs": 125,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Tenstorrent (greenhouse)",
+   "kind": "ats",
+   "jobs": 123,
+   "ok": true,
+   "error": ""
+  },
+  {
    "source": "KLA (workday)",
    "kind": "ats",
    "jobs": 123,
@@ -550,28 +564,14 @@
    "error": ""
   },
   {
-   "source": "Tenstorrent (greenhouse)",
+   "source": "Planet Labs (greenhouse)",
    "kind": "ats",
-   "jobs": 121,
+   "jobs": 122,
    "ok": true,
    "error": ""
   },
   {
    "source": "Cerebras (ashby)",
-   "kind": "ats",
-   "jobs": 117,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Planet Labs (greenhouse)",
-   "kind": "ats",
-   "jobs": 117,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Salesforce (workday)",
    "kind": "ats",
    "jobs": 116,
    "ok": true,
@@ -579,6 +579,13 @@
   },
   {
    "source": "Mercor (ashby)",
+   "kind": "ats",
+   "jobs": 115,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Salesforce (workday)",
    "kind": "ats",
    "jobs": 114,
    "ok": true,
@@ -599,6 +606,13 @@
    "error": ""
   },
   {
+   "source": "Instacart (greenhouse)",
+   "kind": "ats",
+   "jobs": 109,
+   "ok": true,
+   "error": ""
+  },
+  {
    "source": "RELX (workday)",
    "kind": "ats",
    "jobs": 108,
@@ -606,9 +620,9 @@
    "error": ""
   },
   {
-   "source": "Instacart (greenhouse)",
+   "source": "Nuro (greenhouse)",
    "kind": "ats",
-   "jobs": 108,
+   "jobs": 107,
    "ok": true,
    "error": ""
   },
@@ -620,28 +634,14 @@
    "error": ""
   },
   {
-   "source": "Nuro (greenhouse)",
-   "kind": "ats",
-   "jobs": 106,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "The Trade Desk (greenhouse)",
-   "kind": "ats",
-   "jobs": 105,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Cognition (ashby)",
    "kind": "ats",
-   "jobs": 104,
+   "jobs": 103,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Asana (greenhouse)",
+   "source": "Innodata (greenhouse)",
    "kind": "ats",
    "jobs": 103,
    "ok": true,
@@ -662,23 +662,16 @@
    "error": ""
   },
   {
-   "source": "Innodata (greenhouse)",
+   "source": "Asana (greenhouse)",
    "kind": "ats",
-   "jobs": 99,
+   "jobs": 100,
    "ok": true,
    "error": ""
   },
   {
-   "source": "TripAdvisor (greenhouse)",
+   "source": "The Trade Desk (greenhouse)",
    "kind": "ats",
    "jobs": 98,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Cresta (greenhouse)",
-   "kind": "ats",
-   "jobs": 97,
    "ok": true,
    "error": ""
   },
@@ -690,23 +683,30 @@
    "error": ""
   },
   {
-   "source": "Autodesk (workday)",
+   "source": "Cresta (greenhouse)",
    "kind": "ats",
-   "jobs": 95,
+   "jobs": 96,
    "ok": true,
    "error": ""
   },
   {
    "source": "Gusto (greenhouse)",
    "kind": "ats",
-   "jobs": 92,
+   "jobs": 96,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "TripAdvisor (greenhouse)",
+   "kind": "ats",
+   "jobs": 95,
    "ok": true,
    "error": ""
   },
   {
    "source": "Lambda (ashby)",
    "kind": "ats",
-   "jobs": 88,
+   "jobs": 89,
    "ok": true,
    "error": ""
   },
@@ -727,7 +727,7 @@
   {
    "source": "Fireworks AI (ashby)",
    "kind": "ats",
-   "jobs": 82,
+   "jobs": 83,
    "ok": true,
    "error": ""
   },
@@ -739,65 +739,79 @@
    "error": ""
   },
   {
+   "source": "Alarm.com (greenhouse)",
+   "kind": "ats",
+   "jobs": 81,
+   "ok": true,
+   "error": ""
+  },
+  {
    "source": "Spotify (lever)",
    "kind": "ats",
-   "jobs": 80,
+   "jobs": 79,
    "ok": true,
    "error": ""
   },
   {
    "source": "Together AI (greenhouse)",
    "kind": "ats",
-   "jobs": 77,
+   "jobs": 78,
    "ok": true,
    "error": ""
   },
   {
    "source": "Mixpanel (greenhouse)",
    "kind": "ats",
-   "jobs": 77,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Alarm.com (greenhouse)",
-   "kind": "ats",
-   "jobs": 77,
+   "jobs": 76,
    "ok": true,
    "error": ""
   },
   {
    "source": "Match (lever)",
    "kind": "ats",
-   "jobs": 76,
+   "jobs": 75,
    "ok": true,
    "error": ""
   },
   {
    "source": "Legend Biotech (greenhouse)",
    "kind": "ats",
-   "jobs": 73,
+   "jobs": 69,
    "ok": true,
    "error": ""
   },
   {
    "source": "Sigma Computing (greenhouse)",
    "kind": "ats",
-   "jobs": 67,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "Chime (greenhouse)",
-   "kind": "ats",
-   "jobs": 66,
+   "jobs": 68,
    "ok": true,
    "error": ""
   },
   {
    "source": "Lightmatter (greenhouse)",
    "kind": "ats",
+   "jobs": 65,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Chime (greenhouse)",
+   "kind": "ats",
+   "jobs": 65,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "SambaNova Systems (greenhouse)",
+   "kind": "ats",
    "jobs": 64,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "Suno (ashby)",
+   "kind": "ats",
+   "jobs": 63,
    "ok": true,
    "error": ""
   },
@@ -809,44 +823,30 @@
    "error": ""
   },
   {
-   "source": "Suno (ashby)",
-   "kind": "ats",
-   "jobs": 61,
-   "ok": true,
-   "error": ""
-  },
-  {
-   "source": "SambaNova Systems (greenhouse)",
-   "kind": "ats",
-   "jobs": 59,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Benchling (ashby)",
    "kind": "ats",
-   "jobs": 56,
+   "jobs": 55,
    "ok": true,
    "error": ""
   },
   {
    "source": "Twitch (greenhouse)",
    "kind": "ats",
-   "jobs": 51,
+   "jobs": 53,
    "ok": true,
    "error": ""
   },
   {
    "source": "Discord (greenhouse)",
    "kind": "ats",
-   "jobs": 48,
+   "jobs": 49,
    "ok": true,
    "error": ""
   },
   {
    "source": "Abridge (ashby)",
    "kind": "ats",
-   "jobs": 47,
+   "jobs": 48,
    "ok": true,
    "error": ""
   },
@@ -867,7 +867,7 @@
   {
    "source": "AppLovin (greenhouse)",
    "kind": "ats",
-   "jobs": 41,
+   "jobs": 44,
    "ok": true,
    "error": ""
   },
@@ -895,7 +895,7 @@
   {
    "source": "Modal (ashby)",
    "kind": "ats",
-   "jobs": 40,
+   "jobs": 39,
    "ok": true,
    "error": ""
   },
@@ -907,16 +907,16 @@
    "error": ""
   },
   {
-   "source": "Turing (greenhouse)",
+   "source": "Physical Intelligence (ashby)",
    "kind": "ats",
-   "jobs": 36,
+   "jobs": 35,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Physical Intelligence (ashby)",
+   "source": "Turing (greenhouse)",
    "kind": "ats",
-   "jobs": 35,
+   "jobs": 34,
    "ok": true,
    "error": ""
   },
@@ -951,7 +951,7 @@
   {
    "source": "Eikon Therapeutics (greenhouse)",
    "kind": "ats",
-   "jobs": 23,
+   "jobs": 22,
    "ok": true,
    "error": ""
   },
@@ -979,7 +979,7 @@
   {
    "source": "Invisible Technologies (greenhouse)",
    "kind": "ats",
-   "jobs": 17,
+   "jobs": 18,
    "ok": true,
    "error": ""
   },
@@ -1012,13 +1012,6 @@
    "error": ""
   },
   {
-   "source": "CleanSpark (lever)",
-   "kind": "ats",
-   "jobs": 11,
-   "ok": true,
-   "error": ""
-  },
-  {
    "source": "Netflix (eightfold)",
    "kind": "ats",
    "jobs": 10,
@@ -1027,6 +1020,13 @@
   },
   {
    "source": "Optiver (greenhouse)",
+   "kind": "ats",
+   "jobs": 10,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "source": "CleanSpark (lever)",
    "kind": "ats",
    "jobs": 10,
    "ok": true,
@@ -1049,14 +1049,14 @@
   {
    "source": "Airtable (greenhouse)",
    "kind": "ats",
-   "jobs": 2,
+   "jobs": 3,
    "ok": true,
    "error": ""
   },
   {
    "source": "Imbue (greenhouse)",
    "kind": "ats",
-   "jobs": 1,
+   "jobs": 2,
    "ok": true,
    "error": ""
   },
