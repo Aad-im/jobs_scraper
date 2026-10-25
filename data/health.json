@@ -1,10 +1,10 @@
 {
- "generated": 1792859228,
- "duration_s": 36.2,
+ "generated": 1792947527,
+ "duration_s": 26.4,
  "aborted": false,
  "totals": {
-  "jobs": 31090,
-  "active": 10951,
+  "jobs": 30884,
+  "active": 10573,
   "shortlisted": 80
  },
  "sources_ok": 146,
@@ -32,13 +32,6 @@
    "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/amplitude/jobs?content=true"
   },
   {
-   "source": "Marqeta (greenhouse)",
-   "kind": "ats",
-   "jobs": 0,
-   "ok": false,
-   "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/mqreferrals/jobs?content=true"
-  },
-  {
    "source": "10x Genomics (greenhouse)",
    "kind": "ats",
    "jobs": 0,
@@ -46,23 +39,30 @@
    "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/10xgenomics/jobs?content=true"
   },
   {
+   "source": "Marqeta (greenhouse)",
+   "kind": "ats",
+   "jobs": 0,
+   "ok": false,
+   "error": "HTTPError: 404 Client Error: Not Found for url: https://boards-api.greenhouse.io/v1/boards/mqreferrals/jobs?content=true"
+  },
+  {
    "source": "Simplify New Grad",
    "kind": "aggregator",
-   "jobs": 19209,
+   "jobs": 19051,
    "ok": true,
    "error": ""
   },
   {
    "source": "Simplify Internships (Summer 2027)",
    "kind": "aggregator",
-   "jobs": 17409,
+   "jobs": 17279,
    "ok": true,
    "error": ""
   },
   {
    "source": "Simplify Internships (Summer 2026)",
    "kind": "aggregator",
-   "jobs": 17409,
+   "jobs": 17279,
    "ok": true,
    "error": ""
   },
@@ -76,7 +76,7 @@
   {
    "source": "Anduril (greenhouse)",
    "kind": "ats",
-   "jobs": 2508,
+   "jobs": 2510,
    "ok": true,
    "error": ""
   },
@@ -90,7 +90,7 @@
   {
    "source": "Off-Season Internships (community)",
    "kind": "aggregator",
-   "jobs": 1095,
+   "jobs": 1108,
    "ok": true,
    "error": ""
   },
@@ -104,7 +104,7 @@
   {
    "source": "OpenAI (ashby)",
    "kind": "ats",
-   "jobs": 796,
+   "jobs": 793,
    "ok": true,
    "error": ""
   },
@@ -118,7 +118,7 @@
   {
    "source": "Anthropic (greenhouse)",
    "kind": "ats",
-   "jobs": 681,
+   "jobs": 682,
    "ok": true,
    "error": ""
   },
@@ -132,7 +132,7 @@
   {
    "source": "Amazon ML/Science",
    "kind": "bigtech",
-   "jobs": 524,
+   "jobs": 521,
    "ok": true,
    "error": ""
   },
@@ -195,7 +195,7 @@
   {
    "source": "MongoDB (greenhouse)",
    "kind": "ats",
-   "jobs": 382,
+   "jobs": 381,
    "ok": true,
    "error": ""
   },
@@ -265,7 +265,7 @@
   {
    "source": "Samsara (greenhouse)",
    "kind": "ats",
-   "jobs": 284,
+   "jobs": 286,
    "ok": true,
    "error": ""
   },
@@ -277,16 +277,16 @@
    "error": ""
   },
   {
-   "source": "Sezzle (greenhouse)",
+   "source": "Brex (greenhouse)",
    "kind": "ats",
-   "jobs": 257,
+   "jobs": 259,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Brex (greenhouse)",
+   "source": "Sezzle (greenhouse)",
    "kind": "ats",
-   "jobs": 254,
+   "jobs": 257,
    "ok": true,
    "error": ""
   },
@@ -356,14 +356,14 @@
   {
    "source": "NVIDIA (workday)",
    "kind": "ats",
-   "jobs": 210,
+   "jobs": 209,
    "ok": true,
    "error": ""
   },
   {
    "source": "Palo Alto Networks (workday)",
    "kind": "ats",
-   "jobs": 204,
+   "jobs": 201,
    "ok": true,
    "error": ""
   },
@@ -431,14 +431,14 @@
    "error": ""
   },
   {
-   "source": "ElevenLabs (ashby)",
+   "source": "Reddit (greenhouse)",
    "kind": "ats",
-   "jobs": 159,
+   "jobs": 160,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Reddit (greenhouse)",
+   "source": "ElevenLabs (ashby)",
    "kind": "ats",
    "jobs": 159,
    "ok": true,
@@ -468,7 +468,7 @@
   {
    "source": "Grafana Labs (greenhouse)",
    "kind": "ats",
-   "jobs": 145,
+   "jobs": 146,
    "ok": true,
    "error": ""
   },
@@ -510,7 +510,7 @@
   {
    "source": "Applied Materials (workday)",
    "kind": "ats",
-   "jobs": 134,
+   "jobs": 133,
    "ok": true,
    "error": ""
   },
@@ -531,7 +531,7 @@
   {
    "source": "Salesforce (workday)",
    "kind": "ats",
-   "jobs": 130,
+   "jobs": 129,
    "ok": true,
    "error": ""
   },
@@ -893,14 +893,14 @@
    "error": ""
   },
   {
-   "source": "Marvell (workday)",
+   "source": "Workday (workday)",
    "kind": "ats",
    "jobs": 40,
    "ok": true,
    "error": ""
   },
   {
-   "source": "Workday (workday)",
+   "source": "Marvell (workday)",
    "kind": "ats",
    "jobs": 40,
    "ok": true,
